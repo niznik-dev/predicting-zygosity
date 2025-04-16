@@ -11,7 +11,7 @@ input_formatting: ""
 
 output_dir: /home/$USER/scratch/zyg_out_${my_wandb_run_name}/
 input_dir: /home/$USER/scratch/zyg_in/${input_formatting}/
-model_dir: /home/$USER/scratch/torchtune_models/
+models_dir: /home/$USER/scratch/torchtune_models/
 
 batch_size: 4
 
@@ -22,8 +22,8 @@ model:
   _component_: torchtune.models.llama3_2.lora_llama3_2_1b
   lora_attn_modules: ['q_proj', 'v_proj', 'output_proj']
   apply_lora_to_mlp: True
-  lora_rank: 8
-  lora_alpha: 16
+  lora_rank: 64
+  lora_alpha: 128
   lora_dropout: 0.0
 
 # Tokenizer
@@ -58,7 +58,7 @@ loss:
 # Training
 epochs: 1
 max_steps_per_epoch: null
-gradient_accumulation_steps: 8
+gradient_accumulation_steps: 1
 compile: False
 
 dataset:
