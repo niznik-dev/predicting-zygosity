@@ -15,7 +15,7 @@
 
 module purge
 module load anaconda3/2024.10
-conda activate tttestcg
+conda activate ttenv
 
 mkdir -p /home/$USER/scratch/zygosity_output_old1line_test/logs/wandb
 tune run lora_finetune_single_device \
