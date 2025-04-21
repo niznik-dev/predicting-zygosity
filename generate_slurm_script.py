@@ -20,6 +20,8 @@ parser.add_argument("--constraint", type=str, help="Slurm constraint to use")
 
 args = parser.parse_args()
 
+username = os.environ.get("USER")
+
 # First edit the yaml template
 with open("templates/finetune_template.yaml", "r") as f:
     config = yaml.safe_load(f)
@@ -35,8 +37,11 @@ for key, value in vars(args).items():
     else:
         config[key] = value
 
+for key in ['input_dir', 'output_dir', 'models_dir']:
+    config[key] = config[key].replace("$USER", username)
+
 with open("finetune_filled.yaml", "w") as f:
-    yaml.dump(config, f)
+    yaml.dump(config, f, sort_keys=False)
 
 # Now create the slurm script
 with open("templates/finetune_template.slurm", "r") as f:
@@ -45,7 +50,7 @@ with open("templates/finetune_template.slurm", "r") as f:
 slurm_script = slurm_script.replace("<JOBNAME>", args.my_wandb_run_name)
 # TODO - lookup reasonable memory/time values based on model choice (create a table somewhere)
 slurm_script = slurm_script.replace("00:15:00", args.time)
-slurm_script = slurm_script.replace("<NETID>", os.environ.get("USER"))
+slurm_script = slurm_script.replace("<NETID>", username)
 
 if args.account:
     slurm_script = slurm_script.replace("##SBATCH --account=<ACT>", "#SBATCH --account=" + args.account)
@@ -55,6 +60,7 @@ if args.constraint:
     slurm_script = slurm_script.replace("##SBATCH --constraint=<CONST>", "#SBATCH --constraint=" + args.constraint)
 
 slurm_script = slurm_script.replace("<OUTPUT_DIR>", full_output_dir)
+slurm_script = slurm_script.replace("$USER", username)
 
 with open("finetune_filled.slurm", "w") as f:
     f.write(slurm_script)

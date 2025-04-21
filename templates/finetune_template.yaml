@@ -29,12 +29,12 @@ model:
 # Tokenizer
 tokenizer:
   _component_: torchtune.models.llama3.llama3_tokenizer
-  path: ${model_dir}/Llama-3.2-1B-Instruct/original/tokenizer.model
+  path: ${models_dir}/Llama-3.2-1B-Instruct/original/tokenizer.model
   max_seq_len: 2048
 
 checkpointer:
   _component_: torchtune.training.FullModelHFCheckpointer
-  checkpoint_dir: ${model_dir}/Llama-3.2-1B-Instruct/
+  checkpoint_dir: ${models_dir}/Llama-3.2-1B-Instruct/
   checkpoint_files: [model.safetensors]
   recipe_checkpoint: null
   output_dir: ${output_dir}

@@ -19,4 +19,4 @@ conda activate ttenv
 
 mkdir -p <OUTPUT_DIR>logs/wandb
 tune run lora_finetune_single_device \
-    --config finetune.yaml
+    --config finetune_filled.yaml
