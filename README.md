@@ -1,6 +1,25 @@
 # predicting-zygosity
 A reboot of Alessandra's repo now attached to our new Project, "Everything Predictor"!
 
+# Prerequisites
+
+- Cloning and Pulling from GitHub (properly!)
+  - [Version Control with Git](https://swcarpentry.github.io/git-novice/) from Software Carpentry
+  - Specifically: Episode 7
+- Basic Linux and Shell Commands
+  - [The Unix Shell](https://swcarpentry.github.io/shell-novice/) from Software Carpentry
+  - Specifically: Episodes 1, 2, 3, and optionally 6
+- Working on a Remote Machine
+  - A [Digital Ocean Tutorial](https://www.digitalocean.com/community/tutorials/how-to-use-visual-studio-code-for-remote-development-via-the-remote-ssh-plugin) for SSH using VSCode
+- Understanding Python package management with conda and pip
+  - [Introduction to Conda for (Data) Scientists](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/) from The Carpentries Incubator
+  - Specifically: Parts 1 and 2
+- [Getting a HuggingFace Account and Token](https://huggingface.co/docs/hub/en/security-tokens)
+- Basic Slurm Knowledge
+  - We recommend the [Princeton Research Computing](https://researchcomputing.princeton.edu/support/knowledge-base/slurm) primer
+- Optional: Experience with Python coding for reading the codebase and/or adding functionality
+  - [Programming with Python](https://swcarpentry.github.io/python-novice-inflammation/) from Software Carpentries
+
 # Installation
 
 ## With conda/pip (the original way):
