@@ -18,7 +18,7 @@ parser.add_argument("--models_dir", type=str, default="/home/$USER/scratch/torch
 
 # ----- Optional YAML Args -----
 parser.add_argument("--max_steps_per_epoch", type=int, help="Maximum steps per epoch (useful for debugging)")
-parser.add_argument("--run_val_every_n_steps", type=int, help="Number of epochs to train for")
+parser.add_argument("--run_val_every_n_steps", type=int, default=50, help="How often to run validation (in steps)")
 
 # ------ Slurm Args -----
 parser.add_argument("--time", type=str, default="00:15:00", help="Time to run the job (HH:MM:SS)")
