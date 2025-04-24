@@ -68,6 +68,12 @@ dataset:
   description: "Twin zygosity prediction dataset formatted for instruction tuning with binary outputs"
   packed: True
 
+run_val_every_n_steps: 50
+dataset_val:
+  _component_: torchtune.datasets.instruct_dataset
+  source: "json"
+  data_files: "${input_dir}/ptwindat_val.json"
+
 # Logging
 metric_logger:
   _component_: torchtune.training.metric_logging.WandBLogger

@@ -15,7 +15,7 @@
 
 module purge
 module load anaconda3/2024.10
-conda activate ttenv
+conda activate <CONDA_ENV>
 
 mkdir -p <OUTPUT_DIR>logs/wandb
 tune run lora_finetune_single_device \

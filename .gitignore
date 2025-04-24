@@ -2,3 +2,4 @@ finetune_m.yaml
 *.out
 *_filled.yaml
 *_filled.slurm
+*.pyc
