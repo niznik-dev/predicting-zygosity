@@ -41,7 +41,32 @@ Once built, make sure to activate the environment when working on any tune comma
 
 ## With minimal conda:
 
-Coming soon!
+Specific to della:
+```
+ssh user@della-gpu.princeton.edu
+module load anaconda3/2024.10
+```
+
+All machines with conda and GPU visibility (including della):
+```
+conda create -n ttenv python=3.12
+conda activate ttenv
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+pip3 install torchao torchtune wandb
+```
+
+Once built, make sure to activate the environment when working on any tune command (and load the anaconda module if you're on della)
+
+## If you ever need torchtune's nightly build...
+
+Sometimes you may want to work with a feature that's merged into torchtune but not part of an official release yet. In that case, you can create an environment like above but split the final pip install into these parts instead:
+```
+pip3 install torchao
+pip3 install --pre torchtune --extra-index-url https://download.pytorch.org/whl/nightly/cpu --no-cache-dir
+pip3 install wandb
+```
+
+A new environment for this is recommended - `ttenv-nightly` is one possible name.
 
 # Downloading a model
 
