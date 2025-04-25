@@ -2,6 +2,10 @@ import argparse
 import os
 import yaml
 
+from utils import run_names
+
+RANDOM_MODEL_RUN_NAME = run_names.generate_model_run_name()[0]
+
 # Skip these when writing the yaml file
 SLURM_ONLY = ['time', 'gpus', 'conda_env', 'account', 'partition', 'constraint']
 
@@ -9,7 +13,7 @@ parser = argparse.ArgumentParser()
 
 # ----- Required YAML Args Reused in Templating -----
 parser.add_argument("--my_wandb_project", type=str, default="PredictingZygosity", help="Project for when results are synced to wandb")
-parser.add_argument("--my_wandb_run_name", type=str, default="MyFirstRun", help="Name for when results are synced to wandb")
+parser.add_argument("--my_wandb_run_name", type=str, help="Name for when results are synced to wandb; if not provided, a random name will be generated")
 parser.add_argument("--input_formatting", type=str, default="raw", help="Name of the folder where your input files are stored within input_dir; useful for multiple formatting styles (e.g. difference vs raw values)")
 
 parser.add_argument("--output_dir_base", type=str, default="/home/$USER/scratch/", help="Full path to the output file folders (final output folder will be 'zyg_out_' + my_wandb_name within this folder)")
@@ -31,6 +35,7 @@ parser.add_argument("--constraint", type=str, help="Slurm constraint to use")
 
 args = parser.parse_args()
 
+model_run_name = args.my_wandb_run_name if args.my_wandb_run_name else RANDOM_MODEL_RUN_NAME
 username = os.environ.get("USER")
 
 # First edit the yaml template
@@ -41,10 +46,12 @@ for key, value in vars(args).items():
     if key in SLURM_ONLY:
         continue
     # Special cases first
+    elif key == "my_wandb_run_name":
+        config["my_wandb_run_name"] = model_run_name
     elif key == "input_dir_base":
         config["input_dir"] = value + args.input_formatting + "/"
     elif key == "output_dir_base":
-        full_output_dir = value + "zyg_out_" + args.my_wandb_run_name + "/"
+        full_output_dir = value + "zyg_out_" + model_run_name + "/"
         config["output_dir"] = full_output_dir
     # The rest are straightforward
     else:
@@ -60,7 +67,7 @@ with open("finetune_filled.yaml", "w") as f:
 with open("templates/finetune_template.slurm", "r") as f:
     slurm_script = f.read()
 
-slurm_script = slurm_script.replace("<JOBNAME>", args.my_wandb_run_name)
+slurm_script = slurm_script.replace("<JOBNAME>", model_run_name)
 # TODO - lookup reasonable memory/time values based on model choice (create a table somewhere)
 slurm_script = slurm_script.replace("00:15:00", args.time)
 slurm_script = slurm_script.replace("<NETID>", username)
