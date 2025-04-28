@@ -51,7 +51,7 @@ All machines with conda and GPU visibility (including della):
 ```
 conda create -n ttenv python=3.12
 conda activate ttenv
-pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+pip3 install torch --index-url https://download.pytorch.org/whl/cu126
 pip3 install torchao torchtune wandb
 ```
 
