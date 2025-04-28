@@ -32,7 +32,7 @@ module load anaconda3/2024.10
 
 All machines with conda and GPU visibility (including della):
 ```
-conda create -n ttenv pytorch torchvision pytorch-cuda=12.4 -c pytorch -c nvidia
+conda create -n ttenv pytorch pytorch-cuda=12.4 -c pytorch -c nvidia
 conda activate ttenv
 pip install torchao torchtune wandb
 ```
