@@ -34,6 +34,7 @@ All machines with conda and GPU visibility (including della):
 ```
 conda create -n ttenv pytorch torchvision pytorch-cuda=12.4 -c pytorch -c nvidia
 conda activate ttenv
+conda install transformers scikit-learn matplotlib # These are only used for eval.py
 pip install torchao torchtune wandb
 ```
 
@@ -52,6 +53,7 @@ All machines with conda and GPU visibility (including della):
 conda create -n ttenv python=3.12
 conda activate ttenv
 pip3 install torch --index-url https://download.pytorch.org/whl/cu126
+pip3 install transformers scikit-learn matplotlib # These are only used for eval.py
 pip3 install torchao torchtune wandb
 ```
 
