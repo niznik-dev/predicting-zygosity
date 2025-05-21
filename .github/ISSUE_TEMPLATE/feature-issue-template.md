@@ -1,8 +1,8 @@
 ---
 name: Feature Request Issue Template
-about: Used by users outside the dev team to request new features
+about: Used by anyone to request new features
 title: ''
-labels: 'request'
+labels: 'feature request'
 assignees: ''
 
 ---

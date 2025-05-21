@@ -10,4 +10,4 @@ Outline any changes to the dependencies.
 
 # Testing Instructions
 
-Add relevant instructions for trying out the new feature.
+Add relevant instructions for trying out the refactoring.
