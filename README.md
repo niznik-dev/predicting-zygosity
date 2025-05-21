@@ -22,25 +22,7 @@ A reboot of Alessandra's repo now attached to our new Project, "Everything Predi
 
 # Installation
 
-## With conda/pip (the original way):
-
-Specific to della:
-```
-ssh user@della-gpu.princeton.edu
-module load anaconda3/2024.10
-```
-
-All machines with conda and GPU visibility (including della):
-```
-conda create -n ttenv pytorch pytorch-cuda=12.4 -c pytorch -c nvidia
-conda activate ttenv
-conda install transformers scikit-learn matplotlib # These are only used for eval.py
-pip install torchao torchtune wandb
-```
-
-Once built, make sure to activate the environment when working on any tune command (and load the anaconda module if you're on della)
-
-## With minimal conda:
+## Current recommended instructions
 
 Specific to della:
 ```
@@ -70,6 +52,10 @@ pip3 install wandb
 
 A new environment for this is recommended - `ttenv-nightly` is one possible name.
 
+### Current use cases
+
+* Working with val_loss (validation loss) which is not yet in a regular release
+
 # Downloading a model
 
 Next you'll need a model to finetune and evaluate with. Here's how to get one *the torchtune way*:
@@ -78,15 +64,18 @@ Next you'll need a model to finetune and evaluate with. Here's how to get one *t
 tune download meta-llama/<model_name> --output-dir <model_dir> --hf-token <hf-token>
 ```
 **model_name**: We've specifically worked with:
-* *Llama-2-7b-hf*
+* Llama-2-7b-hf
 * Llama-3.1-8B-Instruct
 * Llama-3.2-1B-Instruct (most common)
+* Llama-3.3-70B-Instruct
 
 **model_dir**: A suggestion is `/scratch/gpfs/$USER/torchtune_models/<model_name>` - you'll need this in finetune.yaml later
 
 **hf-token**: You can get this from your HuggingFace account; **NEVER** commit this to a repo!
 
 # Formatting Input Files to JSON
+
+## With twin dataset
 
 First, obtain the csv files for this project (named in the format twindat_sim_?k_NN.csv, where ? = thousands of rows and NN is either 24 or 99 (variables)) and place them in a nice folder - I suggest `zyg_raw`.
 
@@ -102,20 +91,22 @@ When complete, multiple JSON files will be created in the same input folder you 
 
 # A Test Run
 
-*This will likely change as we complete [#1](https://github.com/niznik-dev/predicting-zygosity/issues/1)...*
+## With capitalization dataset
 
-**finetune.yaml**: fill in each of the "COMMON CONFIGS TO CHANGE" near the top of the file
-* If you followed the suggestions, the dirs can be left alone
-* A bach_size of 4 is fine for now
+Coming soon!
 
-**finetune.slurm**: Fix a few things:
-* Replace <NETID> so that the email is valid for you
-* If you typically use an account and/or partition in slurm scripts, uncomment those lines with the appropriate settings
-* For this test, you can leave the gpu80 constraint commented out
-* Change the folder after scratch in the mkdir command to match `my_wandb_run_name` from the yaml (leave the /logs/wandb ending!)
-* Update the path to config if you do not follow the listed convention
+## Wtih twin dataset
 
-Then run `sbatch finetune.slurm` and watch the magic happen!
+Now that we have a yaml/slurm generator, we can leverage that to make the files for our run. Before running, please check:
 
+* Make sure `input_dir_base` is set correctly to your choice in the previous section
+* If you have subfolders in `input_dir_base`, make sure to change `input_formatting` to the name of the subfolder you want instead of an empty string (uncommon)
+* Make sure `conda_env` is the same one you created previously
+
+```
+python generate_slurm_script.py --my_wandb_project my_first_tests --my_wandb_run_name my_first_test --input_dir_base /scratch/gpfs/$USER/zyg_in/ --input_formatting '' --conda_env ttenv
+```
+
+Then run `sbatch finetune_filled.slurm` and watch the magic happen!
 
 
