@@ -75,6 +75,10 @@ tune download meta-llama/<model_name> --output-dir <model_dir> --hf-token <hf-to
 
 # Formatting Input Files to JSON
 
+## With capitalization dataset
+
+The file already exists for you (coming soon)!
+
 ## With twin dataset
 
 First, obtain the csv files for this project (named in the format twindat_sim_?k_NN.csv, where ? = thousands of rows and NN is either 24 or 99 (variables)) and place them in a nice folder - I suggest `zyg_raw`.
