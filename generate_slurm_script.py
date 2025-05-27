@@ -16,9 +16,9 @@ parser.add_argument("--my_wandb_project", type=str, default="PredictingZygosity"
 parser.add_argument("--my_wandb_run_name", type=str, help="Name for when results are synced to wandb; if not provided, a random name will be generated")
 parser.add_argument("--input_formatting", type=str, default="raw", help="Name of the folder where your input files are stored within input_dir; useful for multiple formatting styles (e.g. difference vs raw values)")
 
-parser.add_argument("--output_dir_base", type=str, default="/home/$USER/scratch/", help="Full path to the output file folders (final output folder will be 'zyg_out_' + my_wandb_name within this folder)")
-parser.add_argument("--input_dir_base", type=str, default="/home/$USER/scratch/zyg_in/", help="Full path to the input file folders")
-parser.add_argument("--models_dir", type=str, default="/home/$USER/scratch/torchtune_models/", help="Full path to the model file folders")
+parser.add_argument("--output_dir_base", type=str, default="/scratch/gpfs/$USER/", help="Full path to the output file folders (final output folder will be 'zyg_out_' + my_wandb_name within this folder)")
+parser.add_argument("--input_dir_base", type=str, default="/scratch/gpfs/$USER/zyg_in/", help="Full path to the input file folders")
+parser.add_argument("--models_dir", type=str, default="/scratch/gpfs/$USER/torchtune_models/", help="Full path to the model file folders")
 
 # ----- Optional YAML Args -----
 parser.add_argument("--max_steps_per_epoch", type=int, help="Maximum steps per epoch (useful for debugging)")
