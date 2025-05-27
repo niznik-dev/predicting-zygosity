@@ -60,6 +60,14 @@ A new environment for this is recommended - `ttenv-nightly` is one possible name
 
 Next you'll need a model to finetune and evaluate with. Here's how to get one *the torchtune way*:
 
+## Step 1 - Request Access on HuggingFace Website (if necessary)
+
+For Meta models in particular, you'll need to navigate to the model on the HuggingFace website, log in, and agree to their Community License Agreement. Once you have an email confirming that you have been granted access, you can continue to the next step.
+
+For Meta, you can typically follow a URL like this: https://huggingface.co/meta-llama/<model_name> (see options below)
+
+## Step 2 - Run the Command
+
 ```
 tune download meta-llama/<model_name> --output-dir <model_dir> --hf-token <hf-token>
 ```

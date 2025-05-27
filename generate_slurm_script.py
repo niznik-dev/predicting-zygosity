@@ -19,9 +19,9 @@ parser.add_argument("--input_formatting", type=str, default="raw", help="Name of
 parser.add_argument("--dataset_filename", type=str, default="tune.json", help="Name of the dataset file (should be in input_dir)")
 parser.add_argument("--dataset_val_filename", type=str, default="val.json", help="Name of the model to use (should be in models_dir)")
 
-parser.add_argument("--output_dir_base", type=str, default="/home/$USER/scratch/", help="Full path to the output file folders (final output folder will be 'zyg_out_' + my_wandb_name within this folder)")
-parser.add_argument("--input_dir_base", type=str, default="/home/$USER/scratch/zyg_in/", help="Full path to the input file folders")
-parser.add_argument("--models_dir", type=str, default="/home/$USER/scratch/torchtune_models/", help="Full path to the model file folders")
+parser.add_argument("--output_dir_base", type=str, default="/scratch/gpfs/$USER/", help="Full path to the output file folders (final output folder will be 'zyg_out_' + my_wandb_name within this folder)")
+parser.add_argument("--input_dir_base", type=str, default="/scratch/gpfs/$USER/zyg_in/", help="Full path to the input file folders")
+parser.add_argument("--models_dir", type=str, default="/scratch/gpfs/$USER/torchtune_models/", help="Full path to the model file folders")
 
 # ----- Optional YAML Args -----
 parser.add_argument("--batch_size", type=int, default=4, help="Batch size for training")

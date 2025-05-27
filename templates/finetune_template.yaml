@@ -12,9 +12,9 @@ input_formatting: ""
 dataset_filename: ""
 dataset_val_filename: ""
 
-output_dir: /home/$USER/scratch/zyg_out_${my_wandb_run_name}/
-input_dir: /home/$USER/scratch/zyg_in/${input_formatting}/
-models_dir: /home/$USER/scratch/torchtune_models/
+output_dir: /scratch/gpfs/$USER/zyg_out_${my_wandb_run_name}/
+input_dir: /scratch/gpfs/$USER/zyg_in/${input_formatting}/
+models_dir: /scratch/gpfs/$USER/torchtune_models/
 
 batch_size: 4
 
