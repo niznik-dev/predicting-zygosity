@@ -4,6 +4,8 @@ model_dir: /home/ar0241/scratch/torchtune_models
 
 batch_size: 4
 
+# ----- END COMMON CONFIGS ----- #
+
 # Model Arguments
 model:
   _component_: torchtune.models.llama3_2.lora_llama3_2_1b
@@ -41,6 +43,28 @@ lr_scheduler:
 
 loss:
   _component_: torchtune.modules.loss.CEWithChunkedOutputLoss
+
+  checkpoint_dir: ${model_dir}/Llama-3.2-1B-Instruct/
+  checkpoint_files: [model.safetensors]
+  recipe_checkpoint: null
+  output_dir: ${output_dir}
+  model_type: LLAMA3_2
+resume_from_checkpoint: False
+save_adapter_weights_only: False
+
+# Optimizer and Scheduler
+optimizer:
+  _component_: torch.optim.AdamW
+  fused: True
+  weight_decay: 0.01
+  lr: 1e-4  # Kept from previous suggestion
+lr_scheduler:
+  _component_: torchtune.training.lr_schedulers.get_cosine_schedule_with_warmup
+  num_warmup_steps: 100
+
+loss:
+  _component_: torchtune.modules.loss.CEWithChunkedOutputLoss
+
 # Training
 epochs: 1
 max_steps_per_epoch: null
@@ -50,7 +74,7 @@ compile: False
 dataset:
   _component_: torchtune.datasets.instruct_dataset
   source: "json"
-  data_files: "${input_dir}/prob_train.json"
+  data_files: "/home/ar0241/scratch/stochastic/prob_train.json"
   description: ""
   packed: True
 
@@ -88,11 +112,11 @@ profiler:
   active_steps: 2
   num_cycles: 1
 
-hf_token: "insert_token_here"
+hf_token: "token_here"
 seed: 1234
 shuffle: True
 
 wandb:
-  api_key: "insert_API_here" 
+  api_key: "key_here"  
   project: "zygosity-twin-llama"
   entity: "llms-are-the-new-glms"
