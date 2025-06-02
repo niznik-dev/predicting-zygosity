@@ -39,7 +39,7 @@ echo "=== Task $SLURM_ARRAY_TASK_ID: noise_p=${noise_p} ==="
 
 # 2) finetune (override input/output dirs via CLI if needed)
 ~/.conda/envs/ttenv/bin/python3.12 -m torchtune._cli.tune run lora_finetune_single_device \
-    --config scratch/bit_parity/train_test.yaml \
+    --config scratch/bit_parity/train_parity.yaml \
   epochs=20
 
 # 3) eval (change the folder to be the one of the last epoch)
