@@ -51,5 +51,3 @@ echo "=== Task $SLURM_ARRAY_TASK_ID: noise_p=${noise_p} ==="
 
 
 ~/.conda/envs/ttenv/bin/python3.12 scratch/bit_parity/plot_accuracy.py --n 14 --epochs 20 --test_size 1000
-
-~/.conda/envs/ttenv/bin/python3.12 scratch/bit_parity/check_loss-13.py --n 14 --epochs 20
