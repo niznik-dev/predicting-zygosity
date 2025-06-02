@@ -1,8 +1,8 @@
 output_dir: /home/ar0241/scratch/twins/output_mar25
-input_dir: /home/ar0241/scratch/bit
+input_dir: /home/ar0241/scratch/bit_parity
 model_dir: /home/ar0241/scratch/torchtune_models
 
-batch_size: 4
+batch_size: 128
 
 # ----- END COMMON CONFIGS ----- #
 
@@ -11,9 +11,13 @@ model:
   _component_: torchtune.models.llama3_2.lora_llama3_2_1b
   lora_attn_modules: ['q_proj', 'v_proj', 'output_proj']
   apply_lora_to_mlp: True
-  lora_rank: 8
-  lora_alpha: 16
+  lora_rank: 16
+  lora_alpha: 32
   lora_dropout: 0.0
+
+loss:
+  _component_: torch.nn.CrossEntropyLoss
+  reduction: mean
 
 # Tokenizer
 tokenizer:
@@ -36,16 +40,13 @@ optimizer:
   _component_: torch.optim.AdamW
   fused: True
   weight_decay: 0.01
-  lr: 1e-4  # Kept from previous suggestion
+  lr: 2e-3  # Kept from previous suggestion
 lr_scheduler:
   _component_: torchtune.training.lr_schedulers.get_cosine_schedule_with_warmup
   num_warmup_steps: 100
 
-loss:
-  _component_: torchtune.modules.loss.CEWithChunkedOutputLoss
 
 # Training
-epochs: 1
 max_steps_per_epoch: null
 gradient_accumulation_steps: 8
 compile: False
@@ -53,7 +54,7 @@ compile: False
 dataset:
   _component_: torchtune.datasets.instruct_dataset
   source: "json"
-  data_files: "./data/parity_train.json"
+  data_files: "/home/ar0241/scratch/bit_parity/parity_train.json"
   description: ""
   packed: True
 
@@ -75,7 +76,6 @@ dtype: bf16
 enable_activation_checkpointing: False
 enable_activation_offloading: False
 
-
 # Profiler (disabled)
 profiler:
   _component_: torchtune.training.setup_torch_profiler
@@ -92,11 +92,14 @@ profiler:
   active_steps: 2
   num_cycles: 1
 
-hf_token: "insert_key"
+hf_token: "token_here"
 seed: 1234
 shuffle: True
 
 wandb:
-  api_key: "insert_key"  # Your WandB API key
+  api_key: "key_here"  # Your WandB API key
   project: "zygosity-twin-llama"
   entity: "llms-are-the-new-glms"
+
+
+  
