@@ -37,7 +37,8 @@ python generate_slurm_script.py \
   --run_val_every_n_steps 4 \
   --conda_env ttenv-nightly \
   --custom_recipe lora_finetune_single_device_val.py \
-  --account msalganik
+  --account msalganik \
+  --constraint gpu80
 
 sbatch finetune_filled.slurm
 ```
@@ -61,7 +62,8 @@ python generate_slurm_script.py \
   --run_val_every_n_steps 4 \
   --conda_env ttenv-nightly \
   --custom_recipe lora_finetune_single_device_val.py \
-  --account msalganik
+  --account msalganik \
+  --constraint gpu80
 
 sbatch finetune_filled.slurm
 ```
