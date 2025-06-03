@@ -3,7 +3,6 @@ name: Bug Issue Template
 about: Used by anyone to submit a bug
 title: ''
 labels: 'bug'
-projects: '3'
 assignees: ''
 
 ---
