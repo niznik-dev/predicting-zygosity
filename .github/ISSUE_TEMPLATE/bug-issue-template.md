@@ -3,6 +3,7 @@ name: Bug Issue Template
 about: Used by anyone to submit a bug
 title: ''
 labels: 'bug'
+projects: ["niznik-dev/3"]
 assignees: ''
 
 ---
