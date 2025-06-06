@@ -68,6 +68,11 @@ for key, value in vars(args).items():
     elif key == "dataset_split_point":
         config["dataset"]["split"] = f"train[:{value}%]"
         config["dataset_val"]["split"] = f"train[{value}%:]"
+    # TODO - change these to actual booleans in argparse?
+    elif key == "save_adapter_weights_only":
+        config["save_adapter_weights_only"] = (value == "true")
+    elif key == "save_last_epoch_only":
+        config["save_last_epoch_only"] = (value == "true")
     elif key == "train_on_input":
         config["dataset"]["train_on_input"] = (value == "true")
     # The rest are straightforward
