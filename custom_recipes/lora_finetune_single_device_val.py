@@ -861,7 +861,7 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
                         )
                     )
                 else:
-                    log.info(f"Skipping checkpoint save for epoch {curr_epoch + 1} to save disk space.")
+                    log.info(f"Skipping checkpoint save for epoch {curr_epoch + 1}...")
 
     def cleanup(self) -> None:
         self._metric_logger.close()
