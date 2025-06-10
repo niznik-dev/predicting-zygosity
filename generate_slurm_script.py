@@ -27,6 +27,7 @@ parser.add_argument("--models_dir", type=str, default="/scratch/gpfs/$USER/torch
 parser.add_argument("--batch_size", type=int, default=4, help="Batch size for training")
 parser.add_argument("--epochs", type=int, default=1, help="Number of epochs to train for")
 parser.add_argument("--save_adapter_weights_only", type=str, default="false", help="Whether to save only the adapter weights (true/false)")
+parser.add_argument("--save_last_epoch_only", type=str, default="false", help="Whether to save only the last epoch (true/false)")
 parser.add_argument("--max_steps_per_epoch", type=int, help="Maximum steps per epoch (useful for debugging)")
 parser.add_argument("--log_every_n_steps", type=int, default=5, help="How often to log (in steps)")
 parser.add_argument("--run_val_every_n_steps", type=int, default=50, help="How often to run validation (in steps)")
@@ -67,6 +68,11 @@ for key, value in vars(args).items():
     elif key == "dataset_split_point":
         config["dataset"]["split"] = f"train[:{value}%]"
         config["dataset_val"]["split"] = f"train[{value}%:]"
+    # TODO - change these to actual booleans in argparse?
+    elif key == "save_adapter_weights_only":
+        config["save_adapter_weights_only"] = (value == "true")
+    elif key == "save_last_epoch_only":
+        config["save_last_epoch_only"] = (value == "true")
     elif key == "train_on_input":
         config["dataset"]["train_on_input"] = (value == "true")
     # The rest are straightforward
