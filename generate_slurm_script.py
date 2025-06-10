@@ -31,7 +31,7 @@ parser.add_argument("--save_last_epoch_only", type=str, default="false", help="W
 parser.add_argument("--max_steps_per_epoch", type=int, help="Maximum steps per epoch (useful for debugging)")
 parser.add_argument("--log_every_n_steps", type=int, default=5, help="How often to log (in steps)")
 parser.add_argument("--run_val_every_n_steps", type=int, default=50, help="How often to run validation (in steps)")
-parser.add_argument("--dataset_split_point", type=int, help="Percentage of the dataset to use for finetuning")
+parser.add_argument("--dataset_split_point", type=int, default=80, help="Percentage of the dataset to use for finetuning")
 parser.add_argument("--train_on_input", type=str, default="false", help="Whether to train on the input data (true/false)")
 
 # ------ Slurm Args -----
