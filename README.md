@@ -83,9 +83,9 @@ tune download meta-llama/<model_name> --output-dir <model_dir> --hf-token <hf-to
 
 # Formatting Input Files to JSON
 
-## With capitalization dataset
+## With capitalization dataset (tests/input_training)
 
-The file already exists for you (coming soon)!
+The file already exists for you - you'll just need to reference it when running the generator in the next step!
 
 ## With twin dataset
 
@@ -105,7 +105,7 @@ When complete, multiple JSON files will be created in the same input folder you 
 
 ## With capitalization dataset
 
-Coming soon!
+For full instructions, see the README.md in tests/input_training (NB - if you haven't already, you'll need to the **ttenv-nightly** environment for this test!)
 
 ## With twin dataset
 
