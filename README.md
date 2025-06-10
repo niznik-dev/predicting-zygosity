@@ -107,7 +107,7 @@ When complete, multiple JSON files will be created in the same input folder you 
 
 Coming soon!
 
-## Wtih twin dataset
+## With twin dataset
 
 Now that we have a yaml/slurm generator, we can leverage that to make the files for our run. Before running, please check:
 
