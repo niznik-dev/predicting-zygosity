@@ -105,7 +105,7 @@ if __name__ == "__main__":
     assert N >= max_unique, (
         f"Total size N must be ≥ number of unique sequences (2^{n}={max_unique}), got {N}"
     )
-    assert 0 <= test_size < N, (
+    assert 1 <= test_size < N, (
         f"test_size must be in [1, N), got {test_size} with N={N}"
     )
 
