@@ -36,6 +36,13 @@ from torchtune.training import DummyProfiler, PROFILER_KEY
 
 from tqdm import tqdm
 
+# Conditional import of custom metrics
+try:
+    from utils.finetune_custom_metrics import calculate_custom_metrics
+    CUSTOM_METRICS_AVAILABLE = True
+except ImportError:
+    CUSTOM_METRICS_AVAILABLE = False
+
 log = utils.get_logger("DEBUG")
 
 
@@ -162,6 +169,10 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
             assert (
                 cfg.get("dataset_val") is not None
             ), "run_val_every_n_steps is set but dataset_val is not provided"
+
+        # Enable metrics calculation automatically if utils.metrics is available
+        self._calculate_custom_metrics = CUSTOM_METRICS_AVAILABLE
+        self._custom_metrics = {}
 
         # activation checkpointing/offloading
         self._enable_activation_checkpointing = cfg.get(
@@ -677,6 +688,13 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
             labels = labels.reshape(-1)
             logits = logits.reshape(-1, logits.size(-1))
 
+        # Calculate custom metrics before computing loss
+        # We do this here because the logits are needed for custom metrics
+        if self._calculate_custom_metrics:
+            metrics = calculate_custom_metrics(logits, labels, self._tokenizer, self._loss_fn.ignore_index)
+            for metric_name, metric_value in metrics.items():
+                self._custom_metrics[metric_name] = metric_value.detach().item()
+
         loss = self._loss_fn(logits, labels)
 
         # free logits otherwise it peaks backward memory
@@ -807,6 +825,12 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
                                 )
                             if self._clip_grad_norm is not None:
                                 log_dict.update({"grad_norm": grad_norm})
+                            
+                            # Add custom metrics to log_dict and then reset for the next step
+                            if self._custom_metrics:
+                                log_dict.update(self._custom_metrics)
+                                self._custom_metrics = {}
+                            
                             self._metric_logger.log_dict(
                                 log_dict,
                                 step=self.global_step,
