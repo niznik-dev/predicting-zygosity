@@ -36,7 +36,7 @@ This script performs a diagnostic comparison between a pretrained language model
 
 ### Token-level likelihood and perplexity
 
-We begin by tokenizing an arbitrary prompt provided at the command line. Both $M_{\text{base}}$ and $M_{\text{adapter}}$ generate logits $\mathbf{z} \in \mathbb{R}^{T \times V}$ over a vocabulary of size $V$ for each of $T$ tokens. These logits are used to compute a **next-token prediction loss** via cross-entropy, averaged across time steps. The exponential of this loss gives **perplexity**, a standard metric indicating how "confident" the model is in generating the observed text. If fine-tuning is effective, we expect $\text{ppl}_{\text{adapter}} < \text{ppl}_{\text{base}}$, especially when the prompt reflects the fine-tuning domain (and perhaps to do worse when it doesn't, depending on how many epochs were run and on the specific task).
+We begin by tokenizing an arbitrary prompt provided at the command line. Both $M_{\text{base}}$ and $M_{\text{adapter}}$ generate logits $\mathbf{z} \in \mathbb{R}^{T \times V}$ over a vocabulary of size $V$ for each of $T$ tokens. These logits are used to compute a **next-token prediction loss** via cross-entropy, averaged across time steps. The exponential of this loss gives **perplexity**, a standard metric indicating how "confident" the model is in generating the observed text. If fine-tuning is effective, we expect the perplexity of the adapter to be lower than that of the base model, especially when the prompt reflects the fine-tuning domain (depending on how many epochs were run and on the specific task).
 
 ### Logit space divergence
 
