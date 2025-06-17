@@ -4,10 +4,10 @@ Generate binary sequence datasets with either parity-based or probabilistic labe
 
 Usage examples:
   # Parity dataset (no noise), 2^5=32 unique, N=1000 samples, test_size=200
-  python generate.py --bit_length 5 --N 1000 --test_size 200 --bit_parity True --test_size 1000
+  python generate.py --bit_length 5 --N 1000000 --p 0 --bit_parity True --test_size 1000
 
   # Probabilistic dataset, p=0.3, N=500
-  python generate.py --bit_length 8 --N 500 --p 0.3 --bit_parity False --test_size 100
+  python generate.py --bit_length 8 --N 500000 --p 0.5 --bit_parity False --test_size 1000
 """
 import argparse
 import itertools
