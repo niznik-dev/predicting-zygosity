@@ -3,10 +3,10 @@
 Generate binary sequence datasets with either parity-based or probabilistic labeling to any outdir.
 
 Usage examples:
-  # Parity dataset (no noise), 2^5=32 unique, N=1000 samples, test_size=200
+  # Parity dataset (no noise), 2^5=32 unique sequences 
   python generate.py --bit_length 5 --N 1000000 --p 0 --bit_parity True --test_size 1000
 
-  # Probabilistic dataset, p=0.3, N=500
+  # Probabilistic dataset, p=0.3, 2^8=256 unique sequences
   python generate.py --bit_length 8 --N 500000 --p 0.5 --bit_parity False --test_size 1000
 """
 import argparse
