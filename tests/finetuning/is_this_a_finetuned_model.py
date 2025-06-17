@@ -54,7 +54,7 @@ def compare_models(base_model_path, adapter_path, prompt):
     print(f"Adapter Model Perplexity: {adapter_ppl:.3f}")
     print(f"Logit MSE Difference:     {mse_diff:.6f}")
 
-    if abs(base_ppl - adapter_ppl) < 0.01 and mse_diff < 1e-4:
+    if abs(base_ppl - adapter_ppl) < ppl_threshold and mse_diff < mse_threshold:
         print("⚠️  Adapter model appears very similar to base model — fine-tuning might not have taken effect.")
     else:
         print("✅ Adapter model is different — likely fine-tuned.")
@@ -62,6 +62,8 @@ def compare_models(base_model_path, adapter_path, prompt):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compare base vs adapter model using perplexity and logits.")
     parser.add_argument("--base_model_path", required=True, help="Path to base model")
+    parser.add_argument("--ppl_threshold", required=True, help="Perplexity threshold")
+    parser.add_argument("--mse_threshold", required=True, help="MSE threshold")
     parser.add_argument("--adapter_path", required=True, help="Path to adapter (PEFT) model")
     parser.add_argument("--prompt", required=True, help="Input string to evaluate")
     args = parser.parse_args()
