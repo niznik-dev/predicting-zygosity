@@ -141,8 +141,9 @@ def calculate_prob_0_1_sum(
 def calculate_custom_metrics(
     logits: torch.Tensor,
     labels: torch.Tensor,
+    embeddings: torch.Tensor = None,
     tokenizer=None,
-    ignore_index: int = -100
+    ignore_index: int = -100,
 ) -> Dict[str, torch.Tensor]:
     """
     Calculate custom metrics for the model.
@@ -152,6 +153,7 @@ def calculate_custom_metrics(
         labels: Ground truth labels
         tokenizer: Tokenizer to look up token IDs
         ignore_index: Index to ignore in calculations
+        model: Model instance (only if used for embeddings, defaults to None and not saving embeddings)
         
     Returns:
         Dictionary of metric names to values
@@ -170,4 +172,7 @@ def calculate_custom_metrics(
         metrics['third_most_likely_token'] = torch.tensor(float(third_token))
         metrics['third_token_prob'] = torch.tensor(third_prob)
     
+    # Embeddings savings (optional)
+
+
     return metrics

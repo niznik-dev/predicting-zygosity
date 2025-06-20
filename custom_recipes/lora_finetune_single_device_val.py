@@ -164,6 +164,10 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         self._gradient_accumulation_steps = cfg.gradient_accumulation_steps
         self._clip_grad_norm = cfg.get("clip_grad_norm", None)
 
+        # Save embeddings or not
+        self._get_embeddings = cfg.get("get_embeddings", False)
+
+
         self._run_val_every_n_steps = cfg.get("run_val_every_n_steps", None)
         if self._run_val_every_n_steps is not None:
             assert (
@@ -674,6 +678,7 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
     def _loss_step(self, batch: Dict[str, torch.Tensor]) -> torch.Tensor:
         # Shape [b, s], needed for the loss not the model
         labels = batch.pop("labels")
+        
         # run model
         with self.activations_handling_ctx:
             logits = self._model(**batch)
@@ -688,17 +693,43 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
             labels = labels.reshape(-1)
             logits = logits.reshape(-1, logits.size(-1))
 
+        # Get embeddings if needed for custom metrics
+        if (self._get_embeddings) and (self.global_step % self._steps_per_epoch == 0): 
+            input_ids = batch["input_ids"].to(self._device)
+            attention_mask = batch["attention_mask"].to(self._device)
+
+            outputs = self._model(
+                input_ids=input_ids, 
+                attention_mask=attention_mask, 
+                output_hidden_states=True, 
+                return_dict=True
+            )
+
+            embeddings = self._model.tok_embeddings(input_ids)
+
+            hidden_states = outputs.hidden_states[-1].to(self._device)  # Last layer, shape: (batch_size, seq_len, hidden_dim)
+
+            # ─── Mean Pooling (excluding pad tokens) ───────────────────────────
+            attention_mask = attention_mask
+            embeddings = (hidden_states * attention_mask.unsqueeze(-1)).sum(1) / attention_mask.sum(1) # (batch_size, hidden_dim)
+
+            logits_new = outputs.logits[0, -1, :]  # next‐token logits
+
+        print(logits)
+        print(logits_new)
+
+
         # Calculate custom metrics before computing loss
         # We do this here because the logits are needed for custom metrics
         if self._calculate_custom_metrics:
-            metrics = calculate_custom_metrics(logits, labels, self._tokenizer, self._loss_fn.ignore_index)
+            metrics = calculate_custom_metrics(logits, labels, embeddings, self._tokenizer, self._loss_fn.ignore_index)
             for metric_name, metric_value in metrics.items():
                 self._custom_metrics[metric_name] = metric_value.detach().item()
 
         loss = self._loss_fn(logits, labels)
 
         # free logits otherwise it peaks backward memory
-        del logits
+        del logits, embeddings
 
         return loss
 
