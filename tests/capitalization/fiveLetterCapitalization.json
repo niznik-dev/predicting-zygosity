@@ -1,0 +1,3546 @@
+[
+  {
+    "input": "alive",
+    "output": "Alive"
+  },
+  {
+    "input": "angel",
+    "output": "Angel"
+  },
+  {
+    "input": "beach",
+    "output": "Beach"
+  },
+  {
+    "input": "bread",
+    "output": "Bread"
+  },
+  {
+    "input": "chair",
+    "output": "Chair"
+  },
+  {
+    "input": "child",
+    "output": "Child"
+  },
+  {
+    "input": "clean",
+    "output": "Clean"
+  },
+  {
+    "input": "climb",
+    "output": "Climb"
+  },
+  {
+    "input": "cloud",
+    "output": "Cloud"
+  },
+  {
+    "input": "dance",
+    "output": "Dance"
+  },
+  {
+    "input": "dream",
+    "output": "Dream"
+  },
+  {
+    "input": "earth",
+    "output": "Earth"
+  },
+  {
+    "input": "event",
+    "output": "Event"
+  },
+  {
+    "input": "faith",
+    "output": "Faith"
+  },
+  {
+    "input": "field",
+    "output": "Field"
+  },
+  {
+    "input": "flame",
+    "output": "Flame"
+  },
+  {
+    "input": "fresh",
+    "output": "Fresh"
+  },
+  {
+    "input": "ghost",
+    "output": "Ghost"
+  },
+  {
+    "input": "grace",
+    "output": "Grace"
+  },
+  {
+    "input": "grass",
+    "output": "Grass"
+  },
+  {
+    "input": "heart",
+    "output": "Heart"
+  },
+  {
+    "input": "horse",
+    "output": "Horse"
+  },
+  {
+    "input": "house",
+    "output": "House"
+  },
+  {
+    "input": "human",
+    "output": "Human"
+  },
+  {
+    "input": "light",
+    "output": "Light"
+  },
+  {
+    "input": "magic",
+    "output": "Magic"
+  },
+  {
+    "input": "money",
+    "output": "Money"
+  },
+  {
+    "input": "music",
+    "output": "Music"
+  },
+  {
+    "input": "night",
+    "output": "Night"
+  },
+  {
+    "input": "ocean",
+    "output": "Ocean"
+  },
+  {
+    "input": "paper",
+    "output": "Paper"
+  },
+  {
+    "input": "plant",
+    "output": "Plant"
+  },
+  {
+    "input": "power",
+    "output": "Power"
+  },
+  {
+    "input": "queen",
+    "output": "Queen"
+  },
+  {
+    "input": "quiet",
+    "output": "Quiet"
+  },
+  {
+    "input": "radio",
+    "output": "Radio"
+  },
+  {
+    "input": "river",
+    "output": "River"
+  },
+  {
+    "input": "robot",
+    "output": "Robot"
+  },
+  {
+    "input": "sharp",
+    "output": "Sharp"
+  },
+  {
+    "input": "sound",
+    "output": "Sound"
+  },
+  {
+    "input": "space",
+    "output": "Space"
+  },
+  {
+    "input": "storm",
+    "output": "Storm"
+  },
+  {
+    "input": "table",
+    "output": "Table"
+  },
+  {
+    "input": "tiger",
+    "output": "Tiger"
+  },
+  {
+    "input": "train",
+    "output": "Train"
+  },
+  {
+    "input": "trust",
+    "output": "Trust"
+  },
+  {
+    "input": "truth",
+    "output": "Truth"
+  },
+  {
+    "input": "under",
+    "output": "Under"
+  },
+  {
+    "input": "unity",
+    "output": "Unity"
+  },
+  {
+    "input": "voice",
+    "output": "Voice"
+  },
+  {
+    "input": "water",
+    "output": "Water"
+  },
+  {
+    "input": "wheel",
+    "output": "Wheel"
+  },
+  {
+    "input": "world",
+    "output": "World"
+  },
+  {
+    "input": "youth",
+    "output": "Youth"
+  },
+  {
+    "input": "zebra",
+    "output": "Zebra"
+  },
+  {
+    "input": "above",
+    "output": "Above"
+  },
+  {
+    "input": "actor",
+    "output": "Actor"
+  },
+  {
+    "input": "admit",
+    "output": "Admit"
+  },
+  {
+    "input": "adopt",
+    "output": "Adopt"
+  },
+  {
+    "input": "adult",
+    "output": "Adult"
+  },
+  {
+    "input": "after",
+    "output": "After"
+  },
+  {
+    "input": "again",
+    "output": "Again"
+  },
+  {
+    "input": "agree",
+    "output": "Agree"
+  },
+  {
+    "input": "alarm",
+    "output": "Alarm"
+  },
+  {
+    "input": "album",
+    "output": "Album"
+  },
+  {
+    "input": "alien",
+    "output": "Alien"
+  },
+  {
+    "input": "allow",
+    "output": "Allow"
+  },
+  {
+    "input": "alone",
+    "output": "Alone"
+  },
+  {
+    "input": "along",
+    "output": "Along"
+  },
+  {
+    "input": "angry",
+    "output": "Angry"
+  },
+  {
+    "input": "apple",
+    "output": "Apple"
+  },
+  {
+    "input": "argue",
+    "output": "Argue"
+  },
+  {
+    "input": "arise",
+    "output": "Arise"
+  },
+  {
+    "input": "arrow",
+    "output": "Arrow"
+  },
+  {
+    "input": "aside",
+    "output": "Aside"
+  },
+  {
+    "input": "avoid",
+    "output": "Avoid"
+  },
+  {
+    "input": "awake",
+    "output": "Awake"
+  },
+  {
+    "input": "award",
+    "output": "Award"
+  },
+  {
+    "input": "aware",
+    "output": "Aware"
+  },
+  {
+    "input": "basic",
+    "output": "Basic"
+  },
+  {
+    "input": "batch",
+    "output": "Batch"
+  },
+  {
+    "input": "being",
+    "output": "Being"
+  },
+  {
+    "input": "bench",
+    "output": "Bench"
+  },
+  {
+    "input": "birth",
+    "output": "Birth"
+  },
+  {
+    "input": "black",
+    "output": "Black"
+  },
+  {
+    "input": "blank",
+    "output": "Blank"
+  },
+  {
+    "input": "blind",
+    "output": "Blind"
+  },
+  {
+    "input": "block",
+    "output": "Block"
+  },
+  {
+    "input": "blood",
+    "output": "Blood"
+  },
+  {
+    "input": "board",
+    "output": "Board"
+  },
+  {
+    "input": "boost",
+    "output": "Boost"
+  },
+  {
+    "input": "brain",
+    "output": "Brain"
+  },
+  {
+    "input": "brand",
+    "output": "Brand"
+  },
+  {
+    "input": "brave",
+    "output": "Brave"
+  },
+  {
+    "input": "break",
+    "output": "Break"
+  },
+  {
+    "input": "brick",
+    "output": "Brick"
+  },
+  {
+    "input": "bride",
+    "output": "Bride"
+  },
+  {
+    "input": "brief",
+    "output": "Brief"
+  },
+  {
+    "input": "bring",
+    "output": "Bring"
+  },
+  {
+    "input": "broad",
+    "output": "Broad"
+  },
+  {
+    "input": "brown",
+    "output": "Brown"
+  },
+  {
+    "input": "brush",
+    "output": "Brush"
+  },
+  {
+    "input": "build",
+    "output": "Build"
+  },
+  {
+    "input": "bunch",
+    "output": "Bunch"
+  },
+  {
+    "input": "burst",
+    "output": "Burst"
+  },
+  {
+    "input": "buyer",
+    "output": "Buyer"
+  },
+  {
+    "input": "cable",
+    "output": "Cable"
+  },
+  {
+    "input": "carry",
+    "output": "Carry"
+  },
+  {
+    "input": "catch",
+    "output": "Catch"
+  },
+  {
+    "input": "cause",
+    "output": "Cause"
+  },
+  {
+    "input": "chain",
+    "output": "Chain"
+  },
+  {
+    "input": "charm",
+    "output": "Charm"
+  },
+  {
+    "input": "chart",
+    "output": "Chart"
+  },
+  {
+    "input": "cheap",
+    "output": "Cheap"
+  },
+  {
+    "input": "check",
+    "output": "Check"
+  },
+  {
+    "input": "chest",
+    "output": "Chest"
+  },
+  {
+    "input": "chief",
+    "output": "Chief"
+  },
+  {
+    "input": "chose",
+    "output": "Chose"
+  },
+  {
+    "input": "claim",
+    "output": "Claim"
+  },
+  {
+    "input": "clear",
+    "output": "Clear"
+  },
+  {
+    "input": "click",
+    "output": "Click"
+  },
+  {
+    "input": "clock",
+    "output": "Clock"
+  },
+  {
+    "input": "close",
+    "output": "Close"
+  },
+  {
+    "input": "coach",
+    "output": "Coach"
+  },
+  {
+    "input": "coast",
+    "output": "Coast"
+  },
+  {
+    "input": "color",
+    "output": "Color"
+  },
+  {
+    "input": "comic",
+    "output": "Comic"
+  },
+  {
+    "input": "copy",
+    "output": "Copy"
+  },
+  {
+    "input": "couch",
+    "output": "Couch"
+  },
+  {
+    "input": "count",
+    "output": "Count"
+  },
+  {
+    "input": "court",
+    "output": "Court"
+  },
+  {
+    "input": "cover",
+    "output": "Cover"
+  },
+  {
+    "input": "craft",
+    "output": "Craft"
+  },
+  {
+    "input": "crash",
+    "output": "Crash"
+  },
+  {
+    "input": "crazy",
+    "output": "Crazy"
+  },
+  {
+    "input": "cream",
+    "output": "Cream"
+  },
+  {
+    "input": "crime",
+    "output": "Crime"
+  },
+  {
+    "input": "cross",
+    "output": "Cross"
+  },
+  {
+    "input": "crowd",
+    "output": "Crowd"
+  },
+  {
+    "input": "crown",
+    "output": "Crown"
+  },
+  {
+    "input": "curve",
+    "output": "Curve"
+  },
+  {
+    "input": "cycle",
+    "output": "Cycle"
+  },
+  {
+    "input": "daily",
+    "output": "Daily"
+  },
+  {
+    "input": "death",
+    "output": "Death"
+  },
+  {
+    "input": "debug",
+    "output": "Debug"
+  },
+  {
+    "input": "delay",
+    "output": "Delay"
+  },
+  {
+    "input": "depth",
+    "output": "Depth"
+  },
+  {
+    "input": "diary",
+    "output": "Diary"
+  },
+  {
+    "input": "dirty",
+    "output": "Dirty"
+  },
+  {
+    "input": "dizzy",
+    "output": "Dizzy"
+  },
+  {
+    "input": "doing",
+    "output": "Doing"
+  },
+  {
+    "input": "doubt",
+    "output": "Doubt"
+  },
+  {
+    "input": "draft",
+    "output": "Draft"
+  },
+  {
+    "input": "drama",
+    "output": "Drama"
+  },
+  {
+    "input": "drawn",
+    "output": "Drawn"
+  },
+  {
+    "input": "dress",
+    "output": "Dress"
+  },
+  {
+    "input": "drink",
+    "output": "Drink"
+  },
+  {
+    "input": "drive",
+    "output": "Drive"
+  },
+  {
+    "input": "early",
+    "output": "Early"
+  },
+  {
+    "input": "eight",
+    "output": "Eight"
+  },
+  {
+    "input": "elder",
+    "output": "Elder"
+  },
+  {
+    "input": "empty",
+    "output": "Empty"
+  },
+  {
+    "input": "enemy",
+    "output": "Enemy"
+  },
+  {
+    "input": "enjoy",
+    "output": "Enjoy"
+  },
+  {
+    "input": "entry",
+    "output": "Entry"
+  },
+  {
+    "input": "equal",
+    "output": "Equal"
+  },
+  {
+    "input": "error",
+    "output": "Error"
+  },
+  {
+    "input": "every",
+    "output": "Every"
+  },
+  {
+    "input": "exact",
+    "output": "Exact"
+  },
+  {
+    "input": "exist",
+    "output": "Exist"
+  },
+  {
+    "input": "extra",
+    "output": "Extra"
+  },
+  {
+    "input": "false",
+    "output": "False"
+  },
+  {
+    "input": "fancy",
+    "output": "Fancy"
+  },
+  {
+    "input": "fault",
+    "output": "Fault"
+  },
+  {
+    "input": "fiber",
+    "output": "Fiber"
+  },
+  {
+    "input": "fifth",
+    "output": "Fifth"
+  },
+  {
+    "input": "fifty",
+    "output": "Fifty"
+  },
+  {
+    "input": "fight",
+    "output": "Fight"
+  },
+  {
+    "input": "final",
+    "output": "Final"
+  },
+  {
+    "input": "first",
+    "output": "First"
+  },
+  {
+    "input": "fixed",
+    "output": "Fixed"
+  },
+  {
+    "input": "floor",
+    "output": "Floor"
+  },
+  {
+    "input": "focus",
+    "output": "Focus"
+  },
+  {
+    "input": "force",
+    "output": "Force"
+  },
+  {
+    "input": "frame",
+    "output": "Frame"
+  },
+  {
+    "input": "front",
+    "output": "Front"
+  },
+  {
+    "input": "fruit",
+    "output": "Fruit"
+  },
+  {
+    "input": "fully",
+    "output": "Fully"
+  },
+  {
+    "input": "funny",
+    "output": "Funny"
+  },
+  {
+    "input": "glass",
+    "output": "Glass"
+  },
+  {
+    "input": "globe",
+    "output": "Globe"
+  },
+  {
+    "input": "glory",
+    "output": "Glory"
+  },
+  {
+    "input": "going",
+    "output": "Going"
+  },
+  {
+    "input": "grand",
+    "output": "Grand"
+  },
+  {
+    "input": "grant",
+    "output": "Grant"
+  },
+  {
+    "input": "great",
+    "output": "Great"
+  },
+  {
+    "input": "green",
+    "output": "Green"
+  },
+  {
+    "input": "gross",
+    "output": "Gross"
+  },
+  {
+    "input": "group",
+    "output": "Group"
+  },
+  {
+    "input": "grown",
+    "output": "Grown"
+  },
+  {
+    "input": "guard",
+    "output": "Guard"
+  },
+  {
+    "input": "guess",
+    "output": "Guess"
+  },
+  {
+    "input": "guest",
+    "output": "Guest"
+  },
+  {
+    "input": "guide",
+    "output": "Guide"
+  },
+  {
+    "input": "habit",
+    "output": "Habit"
+  },
+  {
+    "input": "hands",
+    "output": "Hands"
+  },
+  {
+    "input": "happy",
+    "output": "Happy"
+  },
+  {
+    "input": "heard",
+    "output": "Heard"
+  },
+  {
+    "input": "heavy",
+    "output": "Heavy"
+  },
+  {
+    "input": "hello",
+    "output": "Hello"
+  },
+  {
+    "input": "hence",
+    "output": "Hence"
+  },
+  {
+    "input": "honor",
+    "output": "Honor"
+  },
+  {
+    "input": "hoped",
+    "output": "Hoped"
+  },
+  {
+    "input": "hotel",
+    "output": "Hotel"
+  },
+  {
+    "input": "humor",
+    "output": "Humor"
+  },
+  {
+    "input": "hurry",
+    "output": "Hurry"
+  },
+  {
+    "input": "ideal",
+    "output": "Ideal"
+  },
+  {
+    "input": "image",
+    "output": "Image"
+  },
+  {
+    "input": "index",
+    "output": "Index"
+  },
+  {
+    "input": "inner",
+    "output": "Inner"
+  },
+  {
+    "input": "input",
+    "output": "Input"
+  },
+  {
+    "input": "issue",
+    "output": "Issue"
+  },
+  {
+    "input": "joint",
+    "output": "Joint"
+  },
+  {
+    "input": "judge",
+    "output": "Judge"
+  },
+  {
+    "input": "juice",
+    "output": "Juice"
+  },
+  {
+    "input": "karma",
+    "output": "Karma"
+  },
+  {
+    "input": "keeps",
+    "output": "Keeps"
+  },
+  {
+    "input": "kills",
+    "output": "Kills"
+  },
+  {
+    "input": "knife",
+    "output": "Knife"
+  },
+  {
+    "input": "knock",
+    "output": "Knock"
+  },
+  {
+    "input": "known",
+    "output": "Known"
+  },
+  {
+    "input": "label",
+    "output": "Label"
+  },
+  {
+    "input": "labor",
+    "output": "Labor"
+  },
+  {
+    "input": "large",
+    "output": "Large"
+  },
+  {
+    "input": "laser",
+    "output": "Laser"
+  },
+  {
+    "input": "later",
+    "output": "Later"
+  },
+  {
+    "input": "laugh",
+    "output": "Laugh"
+  },
+  {
+    "input": "layer",
+    "output": "Layer"
+  },
+  {
+    "input": "learn",
+    "output": "Learn"
+  },
+  {
+    "input": "least",
+    "output": "Least"
+  },
+  {
+    "input": "leave",
+    "output": "Leave"
+  },
+  {
+    "input": "legal",
+    "output": "Legal"
+  },
+  {
+    "input": "level",
+    "output": "Level"
+  },
+  {
+    "input": "limit",
+    "output": "Limit"
+  },
+  {
+    "input": "lived",
+    "output": "Lived"
+  },
+  {
+    "input": "local",
+    "output": "Local"
+  },
+  {
+    "input": "logic",
+    "output": "Logic"
+  },
+  {
+    "input": "loose",
+    "output": "Loose"
+  },
+  {
+    "input": "lower",
+    "output": "Lower"
+  },
+  {
+    "input": "lucky",
+    "output": "Lucky"
+  },
+  {
+    "input": "lunar",
+    "output": "Lunar"
+  },
+  {
+    "input": "lunch",
+    "output": "Lunch"
+  },
+  {
+    "input": "macro",
+    "output": "Macro"
+  },
+  {
+    "input": "major",
+    "output": "Major"
+  },
+  {
+    "input": "match",
+    "output": "Match"
+  },
+  {
+    "input": "maybe",
+    "output": "Maybe"
+  },
+  {
+    "input": "meals",
+    "output": "Meals"
+  },
+  {
+    "input": "means",
+    "output": "Means"
+  },
+  {
+    "input": "media",
+    "output": "Media"
+  },
+  {
+    "input": "meets",
+    "output": "Meets"
+  },
+  {
+    "input": "melon",
+    "output": "Melon"
+  },
+  {
+    "input": "metal",
+    "output": "Metal"
+  },
+  {
+    "input": "might",
+    "output": "Might"
+  },
+  {
+    "input": "minor",
+    "output": "Minor"
+  },
+  {
+    "input": "mixed",
+    "output": "Mixed"
+  },
+  {
+    "input": "model",
+    "output": "Model"
+  },
+  {
+    "input": "moral",
+    "output": "Moral"
+  },
+  {
+    "input": "mount",
+    "output": "Mount"
+  },
+  {
+    "input": "mouse",
+    "output": "Mouse"
+  },
+  {
+    "input": "mouth",
+    "output": "Mouth"
+  },
+  {
+    "input": "moved",
+    "output": "Moved"
+  },
+  {
+    "input": "movie",
+    "output": "Movie"
+  },
+  {
+    "input": "names",
+    "output": "Names"
+  },
+  {
+    "input": "needs",
+    "output": "Needs"
+  },
+  {
+    "input": "nerve",
+    "output": "Nerve"
+  },
+  {
+    "input": "never",
+    "output": "Never"
+  },
+  {
+    "input": "newer",
+    "output": "Newer"
+  },
+  {
+    "input": "ninja",
+    "output": "Ninja"
+  },
+  {
+    "input": "ninth",
+    "output": "Ninth"
+  },
+  {
+    "input": "noise",
+    "output": "Noise"
+  },
+  {
+    "input": "north",
+    "output": "North"
+  },
+  {
+    "input": "noted",
+    "output": "Noted"
+  },
+  {
+    "input": "novel",
+    "output": "Novel"
+  },
+  {
+    "input": "nurse",
+    "output": "Nurse"
+  },
+  {
+    "input": "offer",
+    "output": "Offer"
+  },
+  {
+    "input": "often",
+    "output": "Often"
+  },
+  {
+    "input": "older",
+    "output": "Older"
+  },
+  {
+    "input": "olive",
+    "output": "Olive"
+  },
+  {
+    "input": "opens",
+    "output": "Opens"
+  },
+  {
+    "input": "order",
+    "output": "Order"
+  },
+  {
+    "input": "other",
+    "output": "Other"
+  },
+  {
+    "input": "outer",
+    "output": "Outer"
+  },
+  {
+    "input": "owned",
+    "output": "Owned"
+  },
+  {
+    "input": "owner",
+    "output": "Owner"
+  },
+  {
+    "input": "panel",
+    "output": "Panel"
+  },
+  {
+    "input": "party",
+    "output": "Party"
+  },
+  {
+    "input": "pasta",
+    "output": "Pasta"
+  },
+  {
+    "input": "patch",
+    "output": "Patch"
+  },
+  {
+    "input": "pause",
+    "output": "Pause"
+  },
+  {
+    "input": "phase",
+    "output": "Phase"
+  },
+  {
+    "input": "phone",
+    "output": "Phone"
+  },
+  {
+    "input": "photo",
+    "output": "Photo"
+  },
+  {
+    "input": "piano",
+    "output": "Piano"
+  },
+  {
+    "input": "piece",
+    "output": "Piece"
+  },
+  {
+    "input": "pilot",
+    "output": "Pilot"
+  },
+  {
+    "input": "pixel",
+    "output": "Pixel"
+  },
+  {
+    "input": "pizza",
+    "output": "Pizza"
+  },
+  {
+    "input": "place",
+    "output": "Place"
+  },
+  {
+    "input": "plain",
+    "output": "Plain"
+  },
+  {
+    "input": "plane",
+    "output": "Plane"
+  },
+  {
+    "input": "plays",
+    "output": "Plays"
+  },
+  {
+    "input": "plaza",
+    "output": "Plaza"
+  },
+  {
+    "input": "poems",
+    "output": "Poems"
+  },
+  {
+    "input": "point",
+    "output": "Point"
+  },
+  {
+    "input": "polar",
+    "output": "Polar"
+  },
+  {
+    "input": "price",
+    "output": "Price"
+  },
+  {
+    "input": "prime",
+    "output": "Prime"
+  },
+  {
+    "input": "print",
+    "output": "Print"
+  },
+  {
+    "input": "prior",
+    "output": "Prior"
+  },
+  {
+    "input": "prize",
+    "output": "Prize"
+  },
+  {
+    "input": "proof",
+    "output": "Proof"
+  },
+  {
+    "input": "prose",
+    "output": "Prose"
+  },
+  {
+    "input": "proud",
+    "output": "Proud"
+  },
+  {
+    "input": "psalm",
+    "output": "Psalm"
+  },
+  {
+    "input": "pulls",
+    "output": "Pulls"
+  },
+  {
+    "input": "punch",
+    "output": "Punch"
+  },
+  {
+    "input": "pupil",
+    "output": "Pupil"
+  },
+  {
+    "input": "purse",
+    "output": "Purse"
+  },
+  {
+    "input": "quake",
+    "output": "Quake"
+  },
+  {
+    "input": "quest",
+    "output": "Quest"
+  },
+  {
+    "input": "quick",
+    "output": "Quick"
+  },
+  {
+    "input": "quota",
+    "output": "Quota"
+  },
+  {
+    "input": "quote",
+    "output": "Quote"
+  },
+  {
+    "input": "raise",
+    "output": "Raise"
+  },
+  {
+    "input": "ranch",
+    "output": "Ranch"
+  },
+  {
+    "input": "range",
+    "output": "Range"
+  },
+  {
+    "input": "rapid",
+    "output": "Rapid"
+  },
+  {
+    "input": "ratio",
+    "output": "Ratio"
+  },
+  {
+    "input": "reach",
+    "output": "Reach"
+  },
+  {
+    "input": "reads",
+    "output": "Reads"
+  },
+  {
+    "input": "ready",
+    "output": "Ready"
+  },
+  {
+    "input": "realm",
+    "output": "Realm"
+  },
+  {
+    "input": "rebel",
+    "output": "Rebel"
+  },
+  {
+    "input": "refer",
+    "output": "Refer"
+  },
+  {
+    "input": "relax",
+    "output": "Relax"
+  },
+  {
+    "input": "reply",
+    "output": "Reply"
+  },
+  {
+    "input": "reset",
+    "output": "Reset"
+  },
+  {
+    "input": "rider",
+    "output": "Rider"
+  },
+  {
+    "input": "ridge",
+    "output": "Ridge"
+  },
+  {
+    "input": "right",
+    "output": "Right"
+  },
+  {
+    "input": "rings",
+    "output": "Rings"
+  },
+  {
+    "input": "risks",
+    "output": "Risks"
+  },
+  {
+    "input": "rival",
+    "output": "Rival"
+  },
+  {
+    "input": "roads",
+    "output": "Roads"
+  },
+  {
+    "input": "rocky",
+    "output": "Rocky"
+  },
+  {
+    "input": "roles",
+    "output": "Roles"
+  },
+  {
+    "input": "roots",
+    "output": "Roots"
+  },
+  {
+    "input": "rough",
+    "output": "Rough"
+  },
+  {
+    "input": "round",
+    "output": "Round"
+  },
+  {
+    "input": "route",
+    "output": "Route"
+  },
+  {
+    "input": "royal",
+    "output": "Royal"
+  },
+  {
+    "input": "rules",
+    "output": "Rules"
+  },
+  {
+    "input": "rural",
+    "output": "Rural"
+  },
+  {
+    "input": "sadly",
+    "output": "Sadly"
+  },
+  {
+    "input": "safer",
+    "output": "Safer"
+  },
+  {
+    "input": "salon",
+    "output": "Salon"
+  },
+  {
+    "input": "sauce",
+    "output": "Sauce"
+  },
+  {
+    "input": "scale",
+    "output": "Scale"
+  },
+  {
+    "input": "scene",
+    "output": "Scene"
+  },
+  {
+    "input": "scope",
+    "output": "Scope"
+  },
+  {
+    "input": "score",
+    "output": "Score"
+  },
+  {
+    "input": "scout",
+    "output": "Scout"
+  },
+  {
+    "input": "sense",
+    "output": "Sense"
+  },
+  {
+    "input": "serve",
+    "output": "Serve"
+  },
+  {
+    "input": "setup",
+    "output": "Setup"
+  },
+  {
+    "input": "seven",
+    "output": "Seven"
+  },
+  {
+    "input": "shade",
+    "output": "Shade"
+  },
+  {
+    "input": "shake",
+    "output": "Shake"
+  },
+  {
+    "input": "shame",
+    "output": "Shame"
+  },
+  {
+    "input": "shape",
+    "output": "Shape"
+  },
+  {
+    "input": "share",
+    "output": "Share"
+  },
+  {
+    "input": "shark",
+    "output": "Shark"
+  },
+  {
+    "input": "sheep",
+    "output": "Sheep"
+  },
+  {
+    "input": "sheet",
+    "output": "Sheet"
+  },
+  {
+    "input": "shelf",
+    "output": "Shelf"
+  },
+  {
+    "input": "shell",
+    "output": "Shell"
+  },
+  {
+    "input": "shift",
+    "output": "Shift"
+  },
+  {
+    "input": "shine",
+    "output": "Shine"
+  },
+  {
+    "input": "shirt",
+    "output": "Shirt"
+  },
+  {
+    "input": "shock",
+    "output": "Shock"
+  },
+  {
+    "input": "shoot",
+    "output": "Shoot"
+  },
+  {
+    "input": "shore",
+    "output": "Shore"
+  },
+  {
+    "input": "short",
+    "output": "Short"
+  },
+  {
+    "input": "shown",
+    "output": "Shown"
+  },
+  {
+    "input": "shows",
+    "output": "Shows"
+  },
+  {
+    "input": "sight",
+    "output": "Sight"
+  },
+  {
+    "input": "silly",
+    "output": "Silly"
+  },
+  {
+    "input": "since",
+    "output": "Since"
+  },
+  {
+    "input": "sixth",
+    "output": "Sixth"
+  },
+  {
+    "input": "sixty",
+    "output": "Sixty"
+  },
+  {
+    "input": "skill",
+    "output": "Skill"
+  },
+  {
+    "input": "sleep",
+    "output": "Sleep"
+  },
+  {
+    "input": "slide",
+    "output": "Slide"
+  },
+  {
+    "input": "small",
+    "output": "Small"
+  },
+  {
+    "input": "smart",
+    "output": "Smart"
+  },
+  {
+    "input": "smoke",
+    "output": "Smoke"
+  },
+  {
+    "input": "snake",
+    "output": "Snake"
+  },
+  {
+    "input": "snack",
+    "output": "Snack"
+  },
+  {
+    "input": "solar",
+    "output": "Solar"
+  },
+  {
+    "input": "solid",
+    "output": "Solid"
+  },
+  {
+    "input": "solve",
+    "output": "Solve"
+  },
+  {
+    "input": "songs",
+    "output": "Songs"
+  },
+  {
+    "input": "sorry",
+    "output": "Sorry"
+  },
+  {
+    "input": "sorts",
+    "output": "Sorts"
+  },
+  {
+    "input": "south",
+    "output": "South"
+  },
+  {
+    "input": "spare",
+    "output": "Spare"
+  },
+  {
+    "input": "speak",
+    "output": "Speak"
+  },
+  {
+    "input": "speed",
+    "output": "Speed"
+  },
+  {
+    "input": "spell",
+    "output": "Spell"
+  },
+  {
+    "input": "spend",
+    "output": "Spend"
+  },
+  {
+    "input": "spine",
+    "output": "Spine"
+  },
+  {
+    "input": "split",
+    "output": "Split"
+  },
+  {
+    "input": "spoke",
+    "output": "Spoke"
+  },
+  {
+    "input": "sport",
+    "output": "Sport"
+  },
+  {
+    "input": "squad",
+    "output": "Squad"
+  },
+  {
+    "input": "stack",
+    "output": "Stack"
+  },
+  {
+    "input": "staff",
+    "output": "Staff"
+  },
+  {
+    "input": "stage",
+    "output": "Stage"
+  },
+  {
+    "input": "stain",
+    "output": "Stain"
+  },
+  {
+    "input": "stake",
+    "output": "Stake"
+  },
+  {
+    "input": "stamp",
+    "output": "Stamp"
+  },
+  {
+    "input": "stand",
+    "output": "Stand"
+  },
+  {
+    "input": "start",
+    "output": "Start"
+  },
+  {
+    "input": "state",
+    "output": "State"
+  },
+  {
+    "input": "stays",
+    "output": "Stays"
+  },
+  {
+    "input": "steal",
+    "output": "Steal"
+  },
+  {
+    "input": "steam",
+    "output": "Steam"
+  },
+  {
+    "input": "steel",
+    "output": "Steel"
+  },
+  {
+    "input": "steep",
+    "output": "Steep"
+  },
+  {
+    "input": "stick",
+    "output": "Stick"
+  },
+  {
+    "input": "still",
+    "output": "Still"
+  },
+  {
+    "input": "stock",
+    "output": "Stock"
+  },
+  {
+    "input": "stone",
+    "output": "Stone"
+  },
+  {
+    "input": "stood",
+    "output": "Stood"
+  },
+  {
+    "input": "store",
+    "output": "Store"
+  },
+  {
+    "input": "story",
+    "output": "Story"
+  },
+  {
+    "input": "strip",
+    "output": "Strip"
+  },
+  {
+    "input": "stuck",
+    "output": "Stuck"
+  },
+  {
+    "input": "study",
+    "output": "Study"
+  },
+  {
+    "input": "stuff",
+    "output": "Stuff"
+  },
+  {
+    "input": "style",
+    "output": "Style"
+  },
+  {
+    "input": "sugar",
+    "output": "Sugar"
+  },
+  {
+    "input": "suite",
+    "output": "Suite"
+  },
+  {
+    "input": "sunny",
+    "output": "Sunny"
+  },
+  {
+    "input": "super",
+    "output": "Super"
+  },
+  {
+    "input": "sweep",
+    "output": "Sweep"
+  },
+  {
+    "input": "sweet",
+    "output": "Sweet"
+  },
+  {
+    "input": "swing",
+    "output": "Swing"
+  },
+  {
+    "input": "sword",
+    "output": "Sword"
+  },
+  {
+    "input": "taken",
+    "output": "Taken"
+  },
+  {
+    "input": "takes",
+    "output": "Takes"
+  },
+  {
+    "input": "talks",
+    "output": "Talks"
+  },
+  {
+    "input": "taste",
+    "output": "Taste"
+  },
+  {
+    "input": "teach",
+    "output": "Teach"
+  },
+  {
+    "input": "teams",
+    "output": "Teams"
+  },
+  {
+    "input": "tears",
+    "output": "Tears"
+  },
+  {
+    "input": "teeth",
+    "output": "Teeth"
+  },
+  {
+    "input": "tells",
+    "output": "Tells"
+  },
+  {
+    "input": "terms",
+    "output": "Terms"
+  },
+  {
+    "input": "tests",
+    "output": "Tests"
+  },
+  {
+    "input": "thank",
+    "output": "Thank"
+  },
+  {
+    "input": "theft",
+    "output": "Theft"
+  },
+  {
+    "input": "their",
+    "output": "Their"
+  },
+  {
+    "input": "theme",
+    "output": "Theme"
+  },
+  {
+    "input": "there",
+    "output": "There"
+  },
+  {
+    "input": "these",
+    "output": "These"
+  },
+  {
+    "input": "thick",
+    "output": "Thick"
+  },
+  {
+    "input": "thing",
+    "output": "Thing"
+  },
+  {
+    "input": "think",
+    "output": "Think"
+  },
+  {
+    "input": "third",
+    "output": "Third"
+  },
+  {
+    "input": "those",
+    "output": "Those"
+  },
+  {
+    "input": "three",
+    "output": "Three"
+  },
+  {
+    "input": "threw",
+    "output": "Threw"
+  },
+  {
+    "input": "throw",
+    "output": "Throw"
+  },
+  {
+    "input": "thumb",
+    "output": "Thumb"
+  },
+  {
+    "input": "tight",
+    "output": "Tight"
+  },
+  {
+    "input": "times",
+    "output": "Times"
+  },
+  {
+    "input": "tired",
+    "output": "Tired"
+  },
+  {
+    "input": "title",
+    "output": "Title"
+  },
+  {
+    "input": "today",
+    "output": "Today"
+  },
+  {
+    "input": "token",
+    "output": "Token"
+  },
+  {
+    "input": "tools",
+    "output": "Tools"
+  },
+  {
+    "input": "topic",
+    "output": "Topic"
+  },
+  {
+    "input": "total",
+    "output": "Total"
+  },
+  {
+    "input": "touch",
+    "output": "Touch"
+  },
+  {
+    "input": "tough",
+    "output": "Tough"
+  },
+  {
+    "input": "tower",
+    "output": "Tower"
+  },
+  {
+    "input": "track",
+    "output": "Track"
+  },
+  {
+    "input": "trade",
+    "output": "Trade"
+  },
+  {
+    "input": "trail",
+    "output": "Trail"
+  },
+  {
+    "input": "trash",
+    "output": "Trash"
+  },
+  {
+    "input": "treat",
+    "output": "Treat"
+  },
+  {
+    "input": "trees",
+    "output": "Trees"
+  },
+  {
+    "input": "trend",
+    "output": "Trend"
+  },
+  {
+    "input": "trial",
+    "output": "Trial"
+  },
+  {
+    "input": "tribe",
+    "output": "Tribe"
+  },
+  {
+    "input": "trick",
+    "output": "Trick"
+  },
+  {
+    "input": "trips",
+    "output": "Trips"
+  },
+  {
+    "input": "truck",
+    "output": "Truck"
+  },
+  {
+    "input": "truly",
+    "output": "Truly"
+  },
+  {
+    "input": "turns",
+    "output": "Turns"
+  },
+  {
+    "input": "twice",
+    "output": "Twice"
+  },
+  {
+    "input": "types",
+    "output": "Types"
+  },
+  {
+    "input": "ultra",
+    "output": "Ultra"
+  },
+  {
+    "input": "uncle",
+    "output": "Uncle"
+  },
+  {
+    "input": "union",
+    "output": "Union"
+  },
+  {
+    "input": "units",
+    "output": "Units"
+  },
+  {
+    "input": "until",
+    "output": "Until"
+  },
+  {
+    "input": "upper",
+    "output": "Upper"
+  },
+  {
+    "input": "urban",
+    "output": "Urban"
+  },
+  {
+    "input": "urged",
+    "output": "Urged"
+  },
+  {
+    "input": "usage",
+    "output": "Usage"
+  },
+  {
+    "input": "users",
+    "output": "Users"
+  },
+  {
+    "input": "using",
+    "output": "Using"
+  },
+  {
+    "input": "usual",
+    "output": "Usual"
+  },
+  {
+    "input": "valid",
+    "output": "Valid"
+  },
+  {
+    "input": "value",
+    "output": "Value"
+  },
+  {
+    "input": "video",
+    "output": "Video"
+  },
+  {
+    "input": "views",
+    "output": "Views"
+  },
+  {
+    "input": "viral",
+    "output": "Viral"
+  },
+  {
+    "input": "visit",
+    "output": "Visit"
+  },
+  {
+    "input": "vital",
+    "output": "Vital"
+  },
+  {
+    "input": "walks",
+    "output": "Walks"
+  },
+  {
+    "input": "walls",
+    "output": "Walls"
+  },
+  {
+    "input": "wants",
+    "output": "Wants"
+  },
+  {
+    "input": "warns",
+    "output": "Warns"
+  },
+  {
+    "input": "waste",
+    "output": "Waste"
+  },
+  {
+    "input": "watch",
+    "output": "Watch"
+  },
+  {
+    "input": "waves",
+    "output": "Waves"
+  },
+  {
+    "input": "weighs",
+    "output": "Weighs"
+  },
+  {
+    "input": "weird",
+    "output": "Weird"
+  },
+  {
+    "input": "wells",
+    "output": "Wells"
+  },
+  {
+    "input": "whale",
+    "output": "Whale"
+  },
+  {
+    "input": "wheat",
+    "output": "Wheat"
+  },
+  {
+    "input": "where",
+    "output": "Where"
+  },
+  {
+    "input": "which",
+    "output": "Which"
+  },
+  {
+    "input": "while",
+    "output": "While"
+  },
+  {
+    "input": "white",
+    "output": "White"
+  },
+  {
+    "input": "whole",
+    "output": "Whole"
+  },
+  {
+    "input": "whose",
+    "output": "Whose"
+  },
+  {
+    "input": "width",
+    "output": "Width"
+  },
+  {
+    "input": "winds",
+    "output": "Winds"
+  },
+  {
+    "input": "wines",
+    "output": "Wines"
+  },
+  {
+    "input": "wings",
+    "output": "Wings"
+  },
+  {
+    "input": "winks",
+    "output": "Winks"
+  },
+  {
+    "input": "wipes",
+    "output": "Wipes"
+  },
+  {
+    "input": "wired",
+    "output": "Wired"
+  },
+  {
+    "input": "wires",
+    "output": "Wires"
+  },
+  {
+    "input": "witch",
+    "output": "Witch"
+  },
+  {
+    "input": "woman",
+    "output": "Woman"
+  },
+  {
+    "input": "women",
+    "output": "Women"
+  },
+  {
+    "input": "woods",
+    "output": "Woods"
+  },
+  {
+    "input": "words",
+    "output": "Words"
+  },
+  {
+    "input": "works",
+    "output": "Works"
+  },
+  {
+    "input": "worry",
+    "output": "Worry"
+  },
+  {
+    "input": "worse",
+    "output": "Worse"
+  },
+  {
+    "input": "worst",
+    "output": "Worst"
+  },
+  {
+    "input": "worth",
+    "output": "Worth"
+  },
+  {
+    "input": "would",
+    "output": "Would"
+  },
+  {
+    "input": "wraps",
+    "output": "Wraps"
+  },
+  {
+    "input": "write",
+    "output": "Write"
+  },
+  {
+    "input": "wrote",
+    "output": "Wrote"
+  },
+  {
+    "input": "yards",
+    "output": "Yards"
+  },
+  {
+    "input": "years",
+    "output": "Years"
+  },
+  {
+    "input": "yield",
+    "output": "Yield"
+  },
+  {
+    "input": "young",
+    "output": "Young"
+  },
+  {
+    "input": "yours",
+    "output": "Yours"
+  },
+  {
+    "input": "zones",
+    "output": "Zones"
+  },
+  {
+    "input": "about",
+    "output": "About"
+  },
+  {
+    "input": "abuse",
+    "output": "Abuse"
+  },
+  {
+    "input": "acids",
+    "output": "Acids"
+  },
+  {
+    "input": "acres",
+    "output": "Acres"
+  },
+  {
+    "input": "acted",
+    "output": "Acted"
+  },
+  {
+    "input": "added",
+    "output": "Added"
+  },
+  {
+    "input": "Agent",
+    "output": "Agent"
+  },
+  {
+    "input": "aimed",
+    "output": "Aimed"
+  },
+  {
+    "input": "aired",
+    "output": "Aired"
+  },
+  {
+    "input": "alike",
+    "output": "Alike"
+  },
+  {
+    "input": "altar",
+    "output": "Altar"
+  },
+  {
+    "input": "amino",
+    "output": "Amino"
+  },
+  {
+    "input": "among",
+    "output": "Among"
+  },
+  {
+    "input": "angle",
+    "output": "Angle"
+  },
+  {
+    "input": "ankle",
+    "output": "Ankle"
+  },
+  {
+    "input": "apart",
+    "output": "Apart"
+  },
+  {
+    "input": "apply",
+    "output": "Apply"
+  },
+  {
+    "input": "areas",
+    "output": "Areas"
+  },
+  {
+    "input": "armed",
+    "output": "Armed"
+  },
+  {
+    "input": "array",
+    "output": "Array"
+  },
+  {
+    "input": "asked",
+    "output": "Asked"
+  },
+  {
+    "input": "asset",
+    "output": "Asset"
+  },
+  {
+    "input": "atoms",
+    "output": "Atoms"
+  },
+  {
+    "input": "audio",
+    "output": "Audio"
+  },
+  {
+    "input": "badge",
+    "output": "Badge"
+  },
+  {
+    "input": "banks",
+    "output": "Banks"
+  },
+  {
+    "input": "based",
+    "output": "Based"
+  },
+  {
+    "input": "bases",
+    "output": "bases"
+  },
+  {
+    "input": "basin",
+    "output": "Basin"
+  },
+  {
+    "input": "bears",
+    "output": "Bears"
+  },
+  {
+    "input": "beast",
+    "output": "Beast"
+  },
+  {
+    "input": "beats",
+    "output": "Beats"
+  },
+  {
+    "input": "began",
+    "output": "Began"
+  },
+  {
+    "input": "begin",
+    "output": "Begin"
+  },
+  {
+    "input": "bells",
+    "output": "Bells"
+  },
+  {
+    "input": "belly",
+    "output": "Belly"
+  },
+  {
+    "input": "below",
+    "output": "Below"
+  },
+  {
+    "input": "bikes",
+    "output": "Bikes"
+  },
+  {
+    "input": "bills",
+    "output": "Bills"
+  },
+  {
+    "input": "binds",
+    "output": "Binds"
+  },
+  {
+    "input": "birds",
+    "output": "Birds"
+  },
+  {
+    "input": "blast",
+    "output": "Blast"
+  },
+  {
+    "input": "blend",
+    "output": "Blend"
+  },
+  {
+    "input": "bless",
+    "output": "Bless"
+  },
+  {
+    "input": "blogs",
+    "output": "Blogs"
+  },
+  {
+    "input": "bloom",
+    "output": "Bloom"
+  },
+  {
+    "input": "blown",
+    "output": "Blown"
+  },
+  {
+    "input": "blues",
+    "output": "Blues"
+  },
+  {
+    "input": "blunt",
+    "output": "Blunt"
+  },
+  {
+    "input": "boats",
+    "output": "Boats"
+  },
+  {
+    "input": "bombs",
+    "output": "Bombs"
+  },
+  {
+    "input": "bonds",
+    "output": "Bonds"
+  },
+  {
+    "input": "bones",
+    "output": "Bones"
+  },
+  {
+    "input": "books",
+    "output": "Books"
+  },
+  {
+    "input": "boots",
+    "output": "Boots"
+  },
+  {
+    "input": "bound",
+    "output": "Bound"
+  },
+  {
+    "input": "boxes",
+    "output": "Boxes"
+  },
+  {
+    "input": "brake",
+    "output": "Brake"
+  },
+  {
+    "input": "brass",
+    "output": "Brass"
+  },
+  {
+    "input": "breed",
+    "output": "Breed"
+  },
+  {
+    "input": "brink",
+    "output": "Brink"
+  },
+  {
+    "input": "broke",
+    "output": "Broke"
+  },
+  {
+    "input": "brook",
+    "output": "Brook"
+  },
+  {
+    "input": "built",
+    "output": "Built"
+  },
+  {
+    "input": "bulbs",
+    "output": "Bulbs"
+  },
+  {
+    "input": "burns",
+    "output": "Burns"
+  },
+  {
+    "input": "buses",
+    "output": "Buses"
+  },
+  {
+    "input": "buys",
+    "output": "Buys"
+  },
+  {
+    "input": "cache",
+    "output": "Cache"
+  },
+  {
+    "input": "calls",
+    "output": "Calls"
+  },
+  {
+    "input": "camel",
+    "output": "Camel"
+  },
+  {
+    "input": "camps",
+    "output": "Camps"
+  },
+  {
+    "input": "candy",
+    "output": "Candy"
+  },
+  {
+    "input": "cards",
+    "output": "Cards"
+  },
+  {
+    "input": "cares",
+    "output": "Cares"
+  },
+  {
+    "input": "cargo",
+    "output": "Cargo"
+  },
+  {
+    "input": "cases",
+    "output": "Cases"
+  },
+  {
+    "input": "caves",
+    "output": "Caves"
+  },
+  {
+    "input": "cells",
+    "output": "Cells"
+  },
+  {
+    "input": "chaos",
+    "output": "Chaos"
+  },
+  {
+    "input": "chase",
+    "output": "Chase"
+  },
+  {
+    "input": "china",
+    "output": "China"
+  },
+  {
+    "input": "chips",
+    "output": "Chips"
+  },
+  {
+    "input": "chunk",
+    "output": "Chunk"
+  },
+  {
+    "input": "civil",
+    "output": "Civil"
+  },
+  {
+    "input": "clamp",
+    "output": "Clamp"
+  },
+  {
+    "input": "class",
+    "output": "Class"
+  },
+  {
+    "input": "cliff",
+    "output": "Cliff"
+  },
+  {
+    "input": "cloth",
+    "output": "Cloth"
+  },
+  {
+    "input": "clubs",
+    "output": "Clubs"
+  },
+  {
+    "input": "codes",
+    "output": "Codes"
+  },
+  {
+    "input": "coins",
+    "output": "Coins"
+  },
+  {
+    "input": "comes",
+    "output": "Comes"
+  },
+  {
+    "input": "coral",
+    "output": "Coral"
+  },
+  {
+    "input": "corps",
+    "output": "Corps"
+  },
+  {
+    "input": "costs",
+    "output": "Costs"
+  },
+  {
+    "input": "could",
+    "output": "Could"
+  },
+  {
+    "input": "crane",
+    "output": "Crane"
+  },
+  {
+    "input": "creek",
+    "output": "Creek"
+  },
+  {
+    "input": "crisp",
+    "output": "Crisp"
+  },
+  {
+    "input": "crops",
+    "output": "Crops"
+  },
+  {
+    "input": "crude",
+    "output": "Crude"
+  },
+  {
+    "input": "crush",
+    "output": "Crush"
+  },
+  {
+    "input": "cubic",
+    "output": "Cubic"
+  },
+  {
+    "input": "dairy",
+    "output": "Dairy"
+  },
+  {
+    "input": "dared",
+    "output": "Dared"
+  },
+  {
+    "input": "dates",
+    "output": "Dates"
+  },
+  {
+    "input": "dealt",
+    "output": "Dealt"
+  },
+  {
+    "input": "debut",
+    "output": "Debut"
+  },
+  {
+    "input": "deckds",
+    "output": "Decks"
+  },
+  {
+    "input": "dense",
+    "output": "Dense"
+  },
+  {
+    "input": "desk",
+    "output": "Desks"
+  },
+  {
+    "input": "devil",
+    "output": "Devil"
+  },
+  {
+    "input": "dices",
+    "output": "Dices"
+  },
+  {
+    "input": "disco",
+    "output": "Disco"
+  },
+  {
+    "input": "disks",
+    "output": "Disks"
+  },
+  {
+    "input": "dived",
+    "output": "Dived"
+  },
+  {
+    "input": "doctors",
+    "output": "Doctors"
+  },
+  {
+    "input": "doors",
+    "output": "Doors"
+  },
+  {
+    "input": "dozen",
+    "output": "Dozen"
+  },
+  {
+    "input": "drain",
+    "output": "Drain"
+  },
+  {
+    "input": "dried",
+    "output": "Dried"
+  },
+  {
+    "input": "drift",
+    "output": "Drift"
+  },
+  {
+    "input": "drill",
+    "output": "Drill"
+  },
+  {
+    "input": "drops",
+    "output": "Drops"
+  },
+  {
+    "input": "drove",
+    "output": "Drove"
+  },
+  {
+    "input": "drums",
+    "output": "Drums"
+  },
+  {
+    "input": "drunk",
+    "output": "Drunk"
+  },
+  {
+    "input": "ducks",
+    "output": "Ducks"
+  },
+  {
+    "input": "dummy",
+    "output": "Dummy"
+  },
+  {
+    "input": "dying",
+    "output": "Dying"
+  },
+  {
+    "input": "eager",
+    "output": "Eager"
+  },
+  {
+    "input": "eagle",
+    "output": "Eagle"
+  },
+  {
+    "input": "eaten",
+    "output": "Eaten"
+  },
+  {
+    "input": "edges",
+    "output": "Edges"
+  },
+  {
+    "input": "eerie",
+    "output": "Eerie"
+  },
+  {
+    "input": "elite",
+    "output": "Elite"
+  },
+  {
+    "input": "email",
+    "output": "Email"
+  },
+  {
+    "input": "ended",
+    "output": "Ended"
+  },
+  {
+    "input": "essay",
+    "output": "Essay"
+  },
+  {
+    "input": "exams",
+    "output": "Exams"
+  },
+  {
+    "input": "exits",
+    "output": "Exits"
+  },
+  {
+    "input": "faced",
+    "output": "Faced"
+  },
+  {
+    "input": "facts",
+    "output": "Facts"
+  },
+  {
+    "input": "fails",
+    "output": "Fails"
+  },
+  {
+    "input": "fairy",
+    "output": "Fairy"
+  },
+  {
+    "input": "falls",
+    "output": "Falls"
+  },
+  {
+    "input": "farms",
+    "output": "Farms"
+  },
+  {
+    "input": "fatal",
+    "output": "Fatal"
+  },
+  {
+    "input": "favor",
+    "output": "Favor"
+  },
+  {
+    "input": "fears",
+    "output": "Fears"
+  },
+  {
+    "input": "feast",
+    "output": "Feast"
+  },
+  {
+    "input": "feels",
+    "output": "Feels"
+  },
+  {
+    "input": "fence",
+    "output": "Fence"
+  },
+  {
+    "input": "filed",
+    "output": "Filed"
+  },
+  {
+    "input": "files",
+    "output": "Files"
+  },
+  {
+    "input": "fills",
+    "output": "Fills"
+  },
+  {
+    "input": "films",
+    "output": "Films"
+  },
+  {
+    "input": "finds",
+    "output": "Finds"
+  },
+  {
+    "input": "fired",
+    "output": "Fired"
+  },
+  {
+    "input": "fires",
+    "output": "Fires"
+  },
+  {
+    "input": "firms",
+    "output": "Firms"
+  },
+  {
+    "input": "fists",
+    "output": "Fists"
+  },
+  {
+    "input": "flags",
+    "output": "Flags"
+  },
+  {
+    "input": "flash",
+    "output": "Flash"
+  },
+  {
+    "input": "flesh",
+    "output": "Flesh"
+  },
+  {
+    "input": "flies",
+    "output": "Flies"
+  },
+  {
+    "input": "flood",
+    "output": "Flood"
+  },
+  {
+    "input": "flour",
+    "output": "Flour"
+  },
+  {
+    "input": "flows",
+    "output": "Flows"
+  },
+  {
+    "input": "fluid",
+    "output": "Fluid"
+  },
+  {
+    "input": "flush",
+    "output": "Flush"
+  },
+  {
+    "input": "focal",
+    "output": "Focal"
+  },
+  {
+    "input": "folks",
+    "output": "Folks"
+  },
+  {
+    "input": "fonts",
+    "output": "Fonts"
+  },
+  {
+    "input": "foods",
+    "output": "Foods"
+  },
+  {
+    "input": "forge",
+    "output": "Forge"
+  },
+  {
+    "input": "forms",
+    "output": "Forms"
+  },
+  {
+    "input": "forth",
+    "output": "Forth"
+  },
+  {
+    "input": "forum",
+    "output": "Forum"
+  },
+  {
+    "input": "found",
+    "output": "Found"
+  },
+  {
+    "input": "fraud",
+    "output": "Fraud"
+  },
+  {
+    "input": "fried",
+    "output": "Fried"
+  },
+  {
+    "input": "frost",
+    "output": "Frost"
+  },
+  {
+    "input": "funds",
+    "output": "Funds"
+  },
+  {
+    "input": "games",
+    "output": "Games"
+  },
+  {
+    "input": "gates",
+    "output": "Gates"
+  },
+  {
+    "input": "gauge",
+    "output": "Gauge"
+  },
+  {
+    "input": "gave",
+    "output": "Gave"
+  },
+  {
+    "input": "gears",
+    "output": "Gears"
+  },
+  {
+    "input": "genes",
+    "output": "Genes"
+  },
+  {
+    "input": "genre",
+    "output": "Genre"
+  },
+  {
+    "input": "giant",
+    "output": "Giant"
+  },
+  {
+    "input": "gifts",
+    "output": "Gifts"
+  },
+  {
+    "input": "girls",
+    "output": "Girls"
+  },
+  {
+    "input": "given",
+    "output": "Given"
+  },
+  {
+    "input": "gives",
+    "output": "Gives"
+  },
+  {
+    "input": "glove",
+    "output": "Glove"
+  },
+  {
+    "input": "goals",
+    "output": "Goals"
+  },
+  {
+    "input": "goods",
+    "output": "Goods"
+  },
+  {
+    "input": "grade",
+    "output": "Grade"
+  },
+  {
+    "input": "grain",
+    "output": "Grain"
+  },
+  {
+    "input": "graph",
+    "output": "Graph"
+  },
+  {
+    "input": "grasp",
+    "output": "Grasp"
+  },
+  {
+    "input": "grave",
+    "output": "Grave"
+  },
+  {
+    "input": "greet",
+    "output": "Greet"
+  },
+  {
+    "input": "grief",
+    "output": "Grief"
+  },
+  {
+    "input": "grill",
+    "output": "Grill"
+  },
+  {
+    "input": "grind",
+    "output": "Grind"
+  },
+  {
+    "input": "grips",
+    "output": "Grips"
+  },
+  {
+    "input": "grows",
+    "output": "Grows"
+  },
+  {
+    "input": "guild",
+    "output": "Guild"
+  },
+  {
+    "input": "guilt",
+    "output": "Guilt"
+  },
+  {
+    "input": "halls",
+    "output": "Halls"
+  },
+  {
+    "input": "hangs",
+    "output": "Hangs"
+  },
+  {
+    "input": "harsh",
+    "output": "Harsh"
+  },
+  {
+    "input": "haste",
+    "output": "Haste"
+  },
+  {
+    "input": "hated",
+    "output": "Hated"
+  },
+  {
+    "input": "haul",
+    "output": "Hauls"
+  },
+  {
+    "input": "heads",
+    "output": "Heads"
+  },
+  {
+    "input": "heals",
+    "output": "Heals"
+  },
+  {
+    "input": "heats",
+    "output": "Heats"
+  },
+  {
+    "input": "heels",
+    "output": "Heels"
+  },
+  {
+    "input": "helps",
+    "output": "Helps"
+  },
+  {
+    "input": "herbs",
+    "output": "Herbs"
+  },
+  {
+    "input": "hides",
+    "output": "Hides"
+  },
+  {
+    "input": "hills",
+    "output": "Hills"
+  },
+  {
+    "input": "hints",
+    "output": "Hints"
+  },
+  {
+    "input": "hired",
+    "output": "Hired"
+  },
+  {
+    "input": "holds",
+    "output": "Holds"
+  },
+  {
+    "input": "holes",
+    "output": "Holes"
+  },
+  {
+    "input": "homes",
+    "output": "Homes"
+  },
+  {
+    "input": "honey",
+    "output": "Honey"
+  },
+  {
+    "input": "hooks",
+    "output": "Hooks"
+  },
+  {
+    "input": "hopes",
+    "output": "Hopes"
+  },
+  {
+    "input": "horns",
+    "output": "Horns"
+  },
+  {
+    "input": "hosts",
+    "output": "Hosts"
+  },
+  {
+    "input": "hours",
+    "output": "Hours"
+  },
+  {
+    "input": "hurts",
+    "output": "Hurts"
+  },
+  {
+    "input": "icons",
+    "output": "Icons"
+  },
+  {
+    "input": "ideas",
+    "output": "Ideas"
+  },
+  {
+    "input": "inbox",
+    "output": "Inbox"
+  },
+  {
+    "input": "intel",
+    "output": "Intel"
+  },
+  {
+    "input": "intro",
+    "output": "Intro"
+  },
+  {
+    "input": "items",
+    "output": "Items"
+  },
+  {
+    "input": "japan",
+    "output": "Japan"
+  },
+  {
+    "input": "jeans",
+    "output": "Jeans"
+  },
+  {
+    "input": "jewel",
+    "output": "Jewel"
+  },
+  {
+    "input": "joins",
+    "output": "Joins"
+  },
+  {
+    "input": "jokes",
+    "output": "Jokes"
+  },
+  {
+    "input": "jumps",
+    "output": "Jumps"
+  },
+  {
+    "input": "kicks",
+    "output": "Kicks"
+  },
+  {
+    "input": "kinds",
+    "output": "Kinds"
+  },
+  {
+    "input": "kings",
+    "output": "Kings"
+  },
+  {
+    "input": "knots",
+    "output": "Knots"
+  },
+  {
+    "input": "knows",
+    "output": "Knows"
+  },
+  {
+    "input": "lacks",
+    "output": "Lacks"
+  },
+  {
+    "input": "lands",
+    "output": "Lands"
+  },
+  {
+    "input": "leads",
+    "output": "Leads"
+  },
+  {
+    "input": "lease",
+    "output": "Lease"
+  },
+  {
+    "input": "lemon",
+    "output": "Lemon"
+  },
+  {
+    "input": "likes",
+    "output": "Likes"
+  },
+  {
+    "input": "lined",
+    "output": "Lined"
+  },
+  {
+    "input": "lines",
+    "output": "Lines"
+  },
+  {
+    "input": "links",
+    "output": "Links"
+  },
+  {
+    "input": "lions",
+    "output": "Lions"
+  },
+  {
+    "input": "lists",
+    "output": "Lists"
+  },
+  {
+    "input": "liver",
+    "output": "Liver"
+  },
+  {
+    "input": "lives",
+    "output": "Lives"
+  },
+  {
+    "input": "loads",
+    "output": "Loads"
+  },
+  {
+    "input": "loans",
+    "output": "Loans"
+  },
+  {
+    "input": "lobby",
+    "output": "Lobby"
+  },
+  {
+    "input": "locks",
+    "output": "Locks"
+  },
+  {
+    "input": "looks",
+    "output": "Looks"
+  },
+  {
+    "input": "loops",
+    "output": "Loops"
+  },
+  {
+    "input": "lords",
+    "output": "Lords"
+  },
+  {
+    "input": "loses",
+    "output": "Loses"
+  },
+  {
+    "input": "loved",
+    "output": "Loved"
+  },
+  {
+    "input": "lover",
+    "output": "Lover"
+  },
+  {
+    "input": "loves",
+    "output": "Loves"
+  },
+  {
+    "input": "loyal",
+    "output": "Loyal"
+  },
+  {
+    "input": "lungs",
+    "output": "Lungs"
+  },
+  {
+    "input": "lying",
+    "output": "Lying"
+  },
+  {
+    "input": "mails",
+    "output": "Mails"
+  },
+  {
+    "input": "makes",
+    "output": "Makes"
+  },
+  {
+    "input": "males",
+    "output": "Males"
+  },
+  {
+    "input": "march",
+    "output": "March"
+  },
+  {
+    "input": "marks",
+    "output": "Marks"
+  },
+  {
+    "input": "masks",
+    "output": "Masks"
+  },
+  {
+    "input": "mayor",
+    "output": "Mayor"
+  },
+  {
+    "input": "meant",
+    "output": "Meant"
+  },
+  {
+    "input": "menus",
+    "output": "Menus"
+  },
+  {
+    "input": "mercy",
+    "output": "Mercy"
+  },
+  {
+    "input": "meter",
+    "output": "Meter"
+  },
+  {
+    "input": "micro",
+    "output": "Micro"
+  },
+  {
+    "input": "miles",
+    "output": "Miles"
+  },
+  {
+    "input": "mills",
+    "output": "Mills"
+  },
+  {
+    "input": "minds",
+    "output": "Minds"
+  },
+  {
+    "input": "mines",
+    "output": "Mines"
+  },
+  {
+    "input": "minus",
+    "output": "Minus"
+  },
+  {
+    "input": "modal",
+    "output": "Modal"
+  },
+  {
+    "input": "modes",
+    "output": "Modes"
+  },
+  {
+    "input": "monks",
+    "output": "Monks"
+  },
+  {
+    "input": "month",
+    "output": "Month"
+  },
+  {
+    "input": "motor",
+    "output": "Motor"
+  },
+  {
+    "input": "moves",
+    "output": "Moves"
+  },
+  {
+    "input": "nasty",
+    "output": "Nasty"
+  },
+  {
+    "input": "naval",
+    "output": "Naval"
+  }
+]
