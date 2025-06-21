@@ -674,9 +674,20 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
     def _loss_step(self, batch: Dict[str, torch.Tensor]) -> torch.Tensor:
         # Shape [b, s], needed for the loss not the model
         labels = batch.pop("labels")
+        print(batch.keys())
         # run model
         with self.activations_handling_ctx:
             logits = self._model(**batch)
+
+        # Calculate custom metrics before computing loss
+        # We do this here because the logits are needed for custom metrics
+        if self._calculate_custom_metrics:
+            metrics = calculate_custom_metrics(logits, labels, self._tokenizer, self._loss_fn.ignore_index)
+            for metric_name, metric_value in metrics.items():
+                if isinstance(metric_value, torch.Tensor):
+                    self._custom_metrics[metric_name] = metric_value.detach().item()
+                else:
+                    self._custom_metrics[metric_name] = metric_value
 
         # Shift labels to compute loss
         # equivalent to doing labels[..., 1:] and logits[..., :-1, :]
@@ -688,14 +699,8 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
             labels = labels.reshape(-1)
             logits = logits.reshape(-1, logits.size(-1))
 
-        # Calculate custom metrics before computing loss
-        # We do this here because the logits are needed for custom metrics
-        if self._calculate_custom_metrics:
-            metrics = calculate_custom_metrics(logits, labels, self._tokenizer, self._loss_fn.ignore_index)
-            for metric_name, metric_value in metrics.items():
-                self._custom_metrics[metric_name] = metric_value.detach().item()
-
-        loss = self._loss_fn(logits, labels)
+        # loss = self._loss_fn(logits, labels)
+        loss = self._test_loss_fn(logits, labels)
 
         # free logits otherwise it peaks backward memory
         del logits
