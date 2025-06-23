@@ -53,14 +53,9 @@ def calculate_prob_0_1_sum(
         Average sum of p(0) + p(1) across valid tokens
     """
 
-    # Flatten logits because they come in as a 3D list of shape
-    # [batch_size, seq_len, vocab_size]
-    # logits: [batch_size, seq_len, vocab_size]
-    final_logits_list = []
-    for tensor in logits:
-        final_pos_logits = tensor[:, -1, :]  # Get last token logits for each batch
-        final_logits_list.append(final_pos_logits)
-    final_logits = torch.cat(final_logits_list, dim=0)  # Concatenate along batch dimension, so new shape is [batch_size, vocab_size]
+    # Concatenate along sequence dimension and take logits from where we think the answer is generated
+    full_logits = torch.cat(logits, dim=1)
+    final_logits = full_logits[:, 216, :]  # TODO - this is awful but for now it's what works! :(
     
     # Convert logits to probabilities
     final_probs = F.softmax(final_logits, dim=-1)
