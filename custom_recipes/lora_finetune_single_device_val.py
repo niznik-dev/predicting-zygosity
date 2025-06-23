@@ -674,7 +674,6 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
     def _loss_step(self, batch: Dict[str, torch.Tensor]) -> torch.Tensor:
         # Shape [b, s], needed for the loss not the model
         labels = batch.pop("labels")
-        print(batch.keys())
         # run model
         with self.activations_handling_ctx:
             logits = self._model(**batch)
@@ -699,8 +698,7 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
             labels = labels.reshape(-1)
             logits = logits.reshape(-1, logits.size(-1))
 
-        # loss = self._loss_fn(logits, labels)
-        loss = self._test_loss_fn(logits, labels)
+        loss = self._loss_fn(logits, labels)
 
         # free logits otherwise it peaks backward memory
         del logits
