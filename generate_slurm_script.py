@@ -30,7 +30,7 @@ parser.add_argument("--save_adapter_weights_only", type=str, default="false", he
 parser.add_argument("--save_last_epoch_only", type=str, default="false", help="Whether to save only the last epoch (true/false)")
 parser.add_argument("--max_steps_per_epoch", type=int, help="Maximum steps per epoch (useful for debugging)")
 parser.add_argument("--log_every_n_steps", type=int, default=5, help="How often to log (in steps)")
-parser.add_argument("--run_val_every_n_steps", type=int, default=50, help="How often to run validation (in steps)")
+parser.add_argument("--run_val_every_n_steps", type=int, default=0, help="How often to run validation (in steps)")
 parser.add_argument("--dataset_split_point", type=int, default=80, help="Percentage of the dataset to use for finetuning")
 parser.add_argument("--train_on_input", type=str, default="false", help="Whether to train on the input data (true/false)")
 
@@ -78,6 +78,14 @@ for key, value in vars(args).items():
     # The rest are straightforward
     else:
         config[key] = value
+
+if config["run_val_every_n_steps"] == 0:
+    # Remove all validation-related keys if not running validation
+    config.pop("dataset_val", None)
+    config.pop("run_val_every_n_steps", None)
+    config.pop("dataset_val_filename", None)
+    # Also remove the split from the main dataset
+    config["dataset"].pop("split", None)
 
 for key in ['input_dir', 'output_dir', 'models_dir']:
     config[key] = config[key].replace("$USER", username)
