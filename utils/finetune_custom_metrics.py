@@ -35,79 +35,6 @@ def get_token_id(token: str, tokenizer=None) -> int:
         raise ValueError(f"Failed to encode token '{token}': {e}")
 
 
-def calculate_prob_0_1_sum(
-    logits: List[torch.Tensor],
-    tokenizer=None
-) -> torch.Tensor:
-    """
-    Calculate average sum of p(0) + p(1) to check if model has learned 
-    that 0 and 1 are the valid outputs.
-    
-    Args:
-        logits: Raw model outputs [batch_size * seq_len, vocab_size]
-        labels: Ground truth labels [batch_size * seq_len]
-        tokenizer: Tokenizer to look up token IDs for "0" and "1"
-        ignore_index: Index to ignore in calculations
-        
-    Returns:
-        Average sum of p(0) + p(1) across valid tokens
-    """
-
-    # Flatten logits because they come in as a 3D list of shape
-    # [batch_size, seq_len, vocab_size]
-    # logits: [batch_size, seq_len, vocab_size]
-    final_logits_list = []
-    for tensor in logits:
-        final_pos_logits = tensor[:, -1, :]  # Get last token logits for each batch
-        final_logits_list.append(final_pos_logits)
-    final_logits = torch.cat(final_logits_list, dim=0)  # Concatenate along batch dimension, so new shape is [batch_size, vocab_size]
-    
-    # Convert logits to probabilities
-    final_probs = F.softmax(final_logits, dim=-1)
-    
-    # Find token IDs for "0" and "1"
-    token_0_id = get_token_id("0", tokenizer)
-    token_1_id = get_token_id("1", tokenizer)
-    
-    # Sum p(0) + p(1) for each valid token
-    prob_0 = final_probs[:, token_0_id].mean().item()
-    prob_1 = final_probs[:, token_1_id].mean().item()
-    prob_sum = prob_0 + prob_1
-
-    top_k = 10
-    avg_probs = final_probs.mean(dim=0)
-    top_probs, top_indices = torch.topk(avg_probs, k=top_k)
-    
-    # More robust token decoding with error handling
-    top_tokens = []
-    for idx in top_indices:
-        try:
-            token = tokenizer.decode([idx.item()])
-            # Handle potential whitespace/special chars for cleaner display
-            if token == '':
-                token = '<empty>'
-            elif token.isspace():
-                token = f'<space:{repr(token)}>'
-            top_tokens.append(token)
-        except:
-            top_tokens.append(f'<decode_error:{idx.item()}>')
-
-    print(f"Top {top_k} tokens and their avg probabilities:")
-    for token, prob in zip(top_tokens, top_probs):
-        print(f"  '{token}': {prob:.4f}")
-
-    print(f"p(0): {avg_probs[token_0_id]:.4f}")
-    print(f"p(1): {avg_probs[token_1_id]:.4f}")
-    print(f"p(0) + p(1): {avg_probs[token_0_id] + avg_probs[token_1_id]:.4f}")
-
-    # Optional: Show what tokens 0 and 1 actually decode to for verification
-    print(f"Token {token_0_id} decodes to: '{tokenizer.decode([token_0_id])}'")
-    print(f"Token {token_1_id} decodes to: '{tokenizer.decode([token_1_id])}'")
-    
-    # Return average across all valid tokens
-    return prob_sum
-
-
 def calculate_custom_metrics(
     logits: List[torch.Tensor],
     labels: torch.Tensor,
@@ -118,7 +45,7 @@ def calculate_custom_metrics(
     Calculate custom metrics for the model.
     
     Args:
-        logits: Raw model outputs
+        logits: Raw model outputs (it's a list because the sequence dimensions gets chunked)
         labels: Ground truth labels (to be used in MSE calculation)
         tokenizer: Tokenizer to look up token IDs
         ignore_index: Index to ignore in calculations (e.g., -100 for padding)
@@ -128,7 +55,10 @@ def calculate_custom_metrics(
     """
     metrics = {}
         
-    # Average sum of p(0) + p(1) 
-    metrics['prob_0_1_sum'] = calculate_prob_0_1_sum(logits, tokenizer)
+    # TODO - first person to add one here wins!
+    # Example (I now strongly recommend this way!): my_metric_function(metrics, logits, labels, tokenizer=tokenizer, ignore_index=ignore_index)
+    # The dictionary `metrics` will be updated in-place with new metric names and values so we don't need to return it.
+    # You can leave out labels, etc. if you don't need them.
+    # Add the function above this one
     
     return metrics
