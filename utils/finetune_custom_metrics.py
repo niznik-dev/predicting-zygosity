@@ -35,7 +35,6 @@ def get_token_id(token: str, tokenizer=None) -> int:
         raise ValueError(f"Failed to encode token '{token}': {e}")
 
 
-<<<<<<< HEAD
 def calculate_prob_0_1_sum(
     logits: List[torch.Tensor],
     tokenizer=None
@@ -104,8 +103,6 @@ def calculate_prob_0_1_sum(
     return prob_sum
 
 
-=======
->>>>>>> main
 def calculate_custom_metrics(
     logits: List[torch.Tensor],
     labels: torch.Tensor,
@@ -124,6 +121,7 @@ def calculate_custom_metrics(
     Returns:
         Dictionary of metric names to values
     """
+    print(labels.shape)
     metrics = {}
         
     # TODO - first person to add one here wins!
