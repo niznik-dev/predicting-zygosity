@@ -1,13 +1,21 @@
+import argparse
 import copy
 import json
 import random
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--in_seq_len", type=int, default=5, help="Input sequence length")
+args = parser.parse_args()
+
+if args.in_seq_len < 1:
+    raise ValueError("Input sequence length must be at least 1.")
 
 # Predictable input and output
 pp = []
 for i in range(1000):
     line = {'input': '', 'output': ''}
-    start = random.randint(0, 1000)
-    for j in range(5):
+    start = random.randint(0, 1000 - args.in_seq_len - 1)
+    for j in range(args.in_seq_len):
         line['input'] += str(start + j) + ','
     line['output'] = str(start + j + 1)
     pp.append(line)

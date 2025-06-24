@@ -35,6 +35,7 @@ def get_token_id(token: str, tokenizer=None) -> int:
         raise ValueError(f"Failed to encode token '{token}': {e}")
 
 
+<<<<<<< HEAD
 def calculate_prob_0_1_sum(
     logits: List[torch.Tensor],
     tokenizer=None
@@ -103,6 +104,8 @@ def calculate_prob_0_1_sum(
     return prob_sum
 
 
+=======
+>>>>>>> main
 def calculate_custom_metrics(
     logits: List[torch.Tensor],
     labels: torch.Tensor,
@@ -113,7 +116,7 @@ def calculate_custom_metrics(
     Calculate custom metrics for the model.
     
     Args:
-        logits: Raw model outputs
+        logits: Raw model outputs (it's a list because the sequence dimensions gets chunked)
         labels: Ground truth labels (to be used in MSE calculation)
         tokenizer: Tokenizer to look up token IDs
         ignore_index: Index to ignore in calculations (e.g., -100 for padding)
@@ -123,7 +126,10 @@ def calculate_custom_metrics(
     """
     metrics = {}
         
-    # Average sum of p(0) + p(1) 
-    metrics['prob_0_1_sum'] = calculate_prob_0_1_sum(logits, tokenizer)
+    # TODO - first person to add one here wins!
+    # Example (I now strongly recommend this way!): my_metric_function(metrics, logits, labels, tokenizer=tokenizer, ignore_index=ignore_index)
+    # The dictionary `metrics` will be updated in-place with new metric names and values so we don't need to return it.
+    # You can leave out labels, etc. if you don't need them.
+    # Add the function above this one
     
     return metrics
