@@ -129,7 +129,9 @@ if __name__ == "__main__":
             test_count += 1
         else:
             train_seqs.append(seq)
-
+    
+    assert set(test_seqs).isdisjoint(train_seqs), "Train and test sets have overlapping sequences!"
+  
     # Label both sets
     train_data = label_sequences(train_seqs, bit_parity, p, rng)
     test_data = label_sequences(test_seqs, bit_parity, p, rng)
