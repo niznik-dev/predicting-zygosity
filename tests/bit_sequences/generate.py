@@ -99,35 +99,49 @@ if __name__ == "__main__":
     seed = args.seed
     outdir = args.outdir
 
-    # Basic assertions
     assert n > 0, f"bit_length must be ≥ 1, got {n}"
-    max_unique = 2 ** n
-    assert N >= max_unique, (
-        f"Total size N must be ≥ number of unique sequences (2^{n}={max_unique}), got {N}"
-    )
-    assert 1 <= test_size < N, (
-        f"test_size must be in [1, N), got {test_size} with N={N}"
-    )
+    assert 0 < test_size < N, f"test_size must be in (0, N), got {test_size} with N={N}"
 
     rng = np.random.RandomState(seed)
 
-    # Generate all unique sequences of length n
+    # Generate all unique sequences
     all_seqs = ["".join(bits) for bits in itertools.product("01", repeat=n)]
 
-    # Label the unique sequences
-    labeled = label_sequences(all_seqs, bit_parity, p, rng)
+    # Sample N sequences with replacement
+    sampled_seqs = rng.choice(all_seqs, size=N, replace=True)
 
-    # Sample (with replacement if N > unique)
-    replace = N > len(labeled)
-    indices = rng.choice(len(labeled), size=N, replace=replace)
-    dataset = [labeled[i] for i in indices]
-    rng.shuffle(dataset)
+    # Identify unique sequences from the sample
+    unique_sampled = list(set(sampled_seqs))
+    rng.shuffle(unique_sampled)
 
-    # Write outputs
+    # Choose unique test sequences
+    num_test_unique = min(test_size, len(unique_sampled))
+    test_unique = set(unique_sampled[:num_test_unique])
+
+    # Allocate each sample to test/train set by its sequence
+    train_seqs = []
+    test_seqs = []
+    test_count = 0
+
+    for seq in sampled_seqs:
+        if seq in test_unique and test_count < test_size:
+            test_seqs.append(seq)
+            test_count += 1
+        else:
+            train_seqs.append(seq)
+    
+    assert set(test_seqs).isdisjoint(train_seqs), "Train and test sets have overlapping sequences!"
+  
+    # Label both sets
+    train_data = label_sequences(train_seqs, bit_parity, p, rng)
+    test_data = label_sequences(test_seqs, bit_parity, p, rng)
+
+    # Write output
     outdir.mkdir(parents=True, exist_ok=True)
-    train, test = dataset[: N - test_size], dataset[N - test_size:]
     with open(outdir / "train.json", "w") as f:
-        json.dump(train, f, indent=2)
+        json.dump(train_data, f, indent=2)
     with open(outdir / "test.json", "w") as f:
-        json.dump(test, f, indent=2)
-    print(f"✅ Generated {len(train)} train and {len(test)} test examples (bit_parity={bit_parity}, p={p})")
+        json.dump(test_data, f, indent=2)
+
+    print(f"✅ Generated {len(train_data)} train and {len(test_data)} test examples (bit_parity={bit_parity}, p={p})")
+
