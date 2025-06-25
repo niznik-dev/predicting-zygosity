@@ -59,16 +59,13 @@ def calculate_prob_0_1_sum(
     # Concatenate along sequence dimension and take logits from where we think the answer is generated
     full_logits = torch.cat(logits, dim=1)
 
-    # Target positions are the last non-ignore index in each sequence
-    # Based on investigation, our prediciton will come 3 later
+    # Target positions are the first non-ignore index in each sequence plus 3
+    # Based on investigation, our prediciton will come 3 later than the first non-ignore index
     # (0: BOS, 1: "Assistant", 2: EOS, 3: "/n" -> "0" or "1")
     target_positions = (labels != ignore_index).float().argmax(dim=1) + 3
-    print(target_positions)
-    for i in range(labels[0].size(0)):
-        if labels[0, i] != ignore_index:
-            print(i, labels[0, i].item(), tokenizer.decode([labels[0, i].item()]))
     
     # Gather the logits at the target position for each sample in the batch using a loop
+    # Remember, this may not be the same position for each sample
     final_logits = []
     for i in range(full_logits.size(0)):
         final_logits.append(full_logits[i, target_positions[i], :])
@@ -84,37 +81,6 @@ def calculate_prob_0_1_sum(
     metrics["p0"] = final_probs[:, token_0_id].mean().item()
     metrics["p1"] = final_probs[:, token_1_id].mean().item()
     metrics["p0_plus_p1"] = metrics["p0"] + metrics["p1"]
-
-    # Below is mostly for debugging - this can be removed when we're confident in the metrics
-    top_k = 10
-    avg_probs = final_probs.mean(dim=0)
-    top_probs, top_indices = torch.topk(avg_probs, k=top_k)
-    
-    # More robust token decoding with error handling
-    top_tokens = []
-    for idx in top_indices:
-        try:
-            token = tokenizer.decode([idx.item()])
-            # Handle potential whitespace/special chars for cleaner display
-            if token == '':
-                token = '<empty>'
-            elif token.isspace():
-                token = f'<space:{repr(token)}>'
-            top_tokens.append(token)
-        except:
-            top_tokens.append(f'<decode_error:{idx.item()}>')
-
-    print(f"Top {top_k} tokens and their avg probabilities:")
-    for token, prob in zip(top_tokens, top_probs):
-        print(f"  '{token}': {prob:.4f}")
-
-    print(f"p(0): {avg_probs[token_0_id]:.4f}")
-    print(f"p(1): {avg_probs[token_1_id]:.4f}")
-    print(f"p(0) + p(1): {avg_probs[token_0_id] + avg_probs[token_1_id]:.4f}")
-
-    # Optional: Show what tokens 0 and 1 actually decode to for verification
-    print(f"Token {token_0_id} decodes to: '{tokenizer.decode([token_0_id])}'")
-    print(f"Token {token_1_id} decodes to: '{tokenizer.decode([token_1_id])}'")
 
 
 def calculate_custom_metrics(
@@ -139,8 +105,7 @@ def calculate_custom_metrics(
         
     # Example (I now strongly recommend this way!): my_metric_function(metrics, logits, labels, tokenizer=tokenizer, ignore_index=ignore_index)
     # The dictionary `metrics` will be updated in-place with new metric names and values so we don't need to return it.
-    # You can leave out labels, etc. if you don't need them.
-    # Add the function above this one
+    # You can leave out labels, etc. if you don't need them and add the function above calculate_custom_metrics
     calculate_prob_0_1_sum(metrics, logits, labels, tokenizer=tokenizer, ignore_index=ignore_index)
     
     return metrics
