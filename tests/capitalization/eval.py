@@ -32,23 +32,26 @@ for word in words:
     # Run model
     with torch.no_grad():
         outputs = model(input_ids)
-        logits = outputs.logits[0, -1, :]
+        print(outputs.logits.shape)
 
-    # Compute full softmax probabilities.
-    softmax_probs = torch.softmax(logits, dim=0)
+    for i in range(outputs.logits.shape[1]):
+        logits = outputs.logits[0, i, :]
 
-    # Get token id for the capitalized word
-    capitalized = word.capitalize()
-    capitalized_tokens = tokenizer(capitalized, add_special_tokens=False).input_ids
+        # Compute full softmax probabilities.
+        softmax_probs = torch.softmax(logits, dim=0)
 
-    print(capitalized_tokens)
+        # Get token id for the capitalized word
+        capitalized = word.capitalize()
+        capitalized_tokens = tokenizer(capitalized, add_special_tokens=False).input_ids
 
-    if len(capitalized_tokens) == 1:
-        cand_prob = softmax_probs[capitalized_tokens[0]].item()
-        print(f"{word} -> {capitalized}: {cand_prob:.4f}")
-    else:
-        print(f"{word} -> {capitalized}: Multi-token case")
-        # Handle multi-token by looking at the first token's probability
-        first_token_prob = softmax_probs[capitalized_tokens[0]].item()
-        print(f"  First token probability: {first_token_prob:.4f}")
+        print(capitalized_tokens)
+
+        if len(capitalized_tokens) == 1:
+            cand_prob = softmax_probs[capitalized_tokens[0]].item()
+            print(f"{word} -> {capitalized}: {cand_prob:.4f}")
+        else:
+            print(f"{word} -> {capitalized}: Multi-token case")
+            # Handle multi-token by looking at the first token's probability
+            first_token_prob = softmax_probs[capitalized_tokens[0]].item()
+            print(f"  First token probability: {first_token_prob:.4f}")
 
