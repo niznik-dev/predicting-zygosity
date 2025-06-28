@@ -686,27 +686,9 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         )
 
     def _loss_step(self, batch: Dict[str, torch.Tensor]) -> torch.Tensor:
-        print(batch.keys())
         
         # Shape [b, s], needed for the loss not the model
         labels = batch.pop("labels")
-
-        # Get embeddings if needed
-        if self._get_embeddings:
-            embeddings = self.get_embeddings(batch)
-
-            # Store embeddings and targets for later use
-            if self.epochs_run not in self._embeddings:
-                self._embeddings[self.epochs_run] = embeddings.detach().item()
-                self._targets[self.epochs_run] = labels.detach().item()
-            else: # if already initialized for current epoch
-                # Concatenate new embeddings and targets to the existing ones
-                self._embeddings[self.epochs_run] = torch.cat(
-                    (self._embeddings[self.epochs_run], embeddings.detach())
-                )
-                self._targets[self.epochs_run] = torch.cat(
-                    (self._targets[self.epochs_run], labels.detach())
-                )
         
         # run model
         with self.activations_handling_ctx:
@@ -737,6 +719,25 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         # free logits otherwise it peaks backward memory
         del logits
 
+
+        # Get embeddings if needed
+        if self._get_embeddings:
+            embeddings = self.get_embeddings(batch)
+
+            # Store embeddings and targets for later use
+            if self.epochs_run not in self._embeddings:
+                self._embeddings[self.epochs_run] = embeddings.detach().item()
+                self._targets[self.epochs_run] = labels.detach().item()
+            else: # if already initialized for current epoch
+                # Concatenate new embeddings and targets to the existing ones
+                self._embeddings[self.epochs_run] = torch.cat(
+                    (self._embeddings[self.epochs_run], embeddings.detach())
+                )
+                self._targets[self.epochs_run] = torch.cat(
+                    (self._targets[self.epochs_run], labels.detach())
+                )
+        
+
         return loss
 
 
@@ -746,8 +747,17 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         Get embeddings from the model for the given batch. Requires no packing!!! 
         (Otherwise the mean pooling will not work correctly)
         """
+        # Ensure the model is in eval mode
+        self._model.eval()
+        
+        print(batch.get("mask").shape, flush = True)
+        print(batch.get("mask"), flush = True)
 
-        mask = batch.get("mask").to_dense() # otherwise is a sparse matrix
+        # Convert mask to float tensor
+        # NOTE: to_dense() fails to preserve the correct dimensions!
+        print(type(batch.get("mask")), flush = True)
+        
+        mask = batch.get("mask").materialize().float()  # shape: (batch_size, 1, seq_len, seq_len)
         print(mask.shape, flush = True)
         print(mask, flush = True)
 
@@ -777,7 +787,7 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
 
         print(embeddings.shape, flush = True)
         print(embeddings, flush = True)
-
+        
         return embeddings
 
 
