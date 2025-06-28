@@ -749,14 +749,7 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         """
         # Ensure the model is in eval mode
         self._model.eval()
-        
-        print(batch.get("mask").shape, flush = True)
-        print(batch.get("mask"), flush = True)
-
-        # Convert mask to float tensor
-        # NOTE: to_dense() fails to preserve the correct dimensions!
-        print(type(batch.get("mask")), flush = True)
-        
+    
         mask = batch.get("mask").materialize().float()  # shape: (batch_size, 1, seq_len, seq_len)
         print(mask.shape, flush = True)
         print(mask, flush = True)
@@ -783,7 +776,6 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         # Mean pooling (ignore padding tokens)
         # ! NOTE: This will ONLY make sense if no packing is used in the dataloader...
         embeddings = (last_hidden * mask.unsqueeze(-1)).sum(1) / mask.sum(1) # shape: (batch_size, hidden_size)
-        # Above fails due to shape mismatch... Why...?
 
         print(embeddings.shape, flush = True)
         print(embeddings, flush = True)
