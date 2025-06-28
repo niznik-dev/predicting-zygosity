@@ -749,7 +749,8 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         """
         # Ensure the model is in eval mode
         self._model.eval()
-    
+
+        # ! NOT WORKING! Needs to be fixed for packed sequences...
         mask = batch.get("mask").materialize().float()  # shape: (batch_size, 1, seq_len, seq_len)
         print(mask.shape, flush = True)
         print(mask, flush = True)
