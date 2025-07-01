@@ -48,6 +48,7 @@ def load_prompts_and_targets(eval_file: str, num_obs: int = None) -> tuple[list[
 
     return prompts, targets
 
+
 def load_model(model_path: str, tokenizer_path: str = None, adapter_path: str = None) -> tuple[AutoTokenizer,nn.Module]:
     """
     Loads a model checkpoint with folder specified by model_path. If adapter_path is None, returns base model.
@@ -80,6 +81,7 @@ def load_model(model_path: str, tokenizer_path: str = None, adapter_path: str = 
         model_out.resize_token_embeddings(len(tokenizer))
 
     return tokenizer, model_out
+
 
 def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
                     use_chat_template = True,
@@ -119,6 +121,7 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
         # shape: (b, vocab_size)
 
     return logits
+
 
 def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
                     use_chat_template = True, only_new_tokens = True,
@@ -162,6 +165,7 @@ def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[st
         # shape: (batch_size, num_return_sequences, seq_len<=max_new_tokens)
 
     return generated_tokens
+
 
 def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str], 
                     use_chat_template = True, pool = False, **kwargs) -> torch.Tensor:
@@ -209,6 +213,8 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
 
 if __name__ == "__main__":
 
+    # ! ----------------------------- Magic Numbers -----------------------------
+
     # Directories
     RUN_NAME="100k-20epoch" # name of folder with checkpoints
 
@@ -216,14 +222,36 @@ if __name__ == "__main__":
     PYTHON_FILE_PATH=f"{BASE_DIR}/embeddings-analysis/get_embeddings.py"
     BASE_MODEL_PATH=f"{BASE_DIR}/torchtune_models/Llama-3.2-1B-Instruct"
     EVAL_DATA_PATH=f"{BASE_DIR}/zyg-in/ptwindat_eval.json"
-    ADAPTER_PATH=f"{BASE_DIR}/zyg-out/{RUN_NAME}/epoch_0/" # Set to None to use base model without adapter
+    ADAPTER_PATH=f"{BASE_DIR}/zyg-out/{RUN_NAME}/epoch_19/" # Set to None to use base model without adapter
     EMBED_SAVE_PATH=f"{BASE_DIR}/zyg-out/{RUN_NAME}/embeddings/"
     
+
+    # Data Loading Params
+    num_obs = 20 # Set to None to load all observations from the eval file
+
+    # Generating Tokens Params
+    generate_args = {
+        "max_new_tokens": 15,
+        "do_sample": True,
+        "num_return_sequences": 5,  # Only >1 if do_sample=True. 
+        "renormalize_logits": True,  # Normalize logits to probabilities
+        "temperature": 1,  # Temperature for sampling
+    }
+    num_runs = 100
+    #   Number of token generation runs. Avoids memory issues if num_return_sequences is large. 
+    #   Yields generated_tokens of shape (num_prompts, num_return_sequences*num_runs, max_new_tokens)
+
+    # Logits & Probabilites Params
+    k = 2  # top k tokens to consider for comparing empirical probabilities with theoretical probabilities
+
+    # ! ----------------------------- End Magic Numbers -----------------------------
+    
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
     # Load prompts and targets
-    prompts, targets = load_prompts_and_targets(EVAL_DATA_PATH, num_obs=1)
+    prompts, targets = load_prompts_and_targets(EVAL_DATA_PATH, num_obs=num_obs)
 
     # Load model and tokenizer
     tokenizer, model = load_model(BASE_MODEL_PATH, adapter_path=ADAPTER_PATH)
@@ -233,12 +261,25 @@ if __name__ == "__main__":
     logits = get_logits(model, tokenizer, prompts)
     probs = torch.softmax(logits, dim=1)
 
-    # Get generated tokens
-    generated_tokens = get_next_tokens(model, tokenizer, prompts,
-                                    only_new_tokens=True, use_chat_template=True,
-                                    max_new_tokens=15, do_sample=True, num_return_sequences=100)
+    # Set seed
+    torch.manual_seed(42)
 
+    # Get generated tokens
+    generated_tokens = None
+    for i in tqdm(range(num_runs), desc="Generating tokens"):
+        # Generate tokens for the prompts
+        generated_tokens_tmp = get_next_tokens(model, tokenizer, prompts,
+                                                only_new_tokens=True, use_chat_template=True,
+                                                **generate_args)
+        
+        if generated_tokens is None:
+            generated_tokens = generated_tokens_tmp
+        else:
+            generated_tokens = torch.cat((generated_tokens, generated_tokens_tmp), dim=1)
+    
     '''
+    # For printing out generated tokens
+    # Note: Commented out to avoid printing too much output...
     for i in range(generated_tokens.shape[0]):
         if len(generated_tokens.shape) > 2: # if num_return_sequences>1 and do_sample=True
             print(f"Generated tokens for prompt: {prompts[i]}:\n\n")
@@ -248,48 +289,46 @@ if __name__ == "__main__":
             print(f"Generated tokens for prompt {i}: {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
     '''
 
-
-    k = 5  # Top-k predictions
+    # Compare empirical distribution of generated tokens with next token probs
 
     vocab_size = len(tokenizer)
     top_k_probs, top_k_indices = torch.topk(probs, k, dim=1)
 
-    assert generated_tokens.shape > 2, "generated_tokens should have at least 3 dimensions (batch_size, num_return_sequences, seq_len)"
+    # Check for multiple generated tokens per prompt
+    assert len(generated_tokens.shape) > 2, "generated_tokens should have at least 3 dimensions (batch_size, num_return_sequences, seq_len)"
+
 
     for i in range(top_k_indices.shape[0]):
         print(f"\nPrompt: {prompts[i]}")
+        print(f"Target: {targets[i]}")
         
         if len(generated_tokens.shape) > 2:  # if num_return_sequences>1 and do_sample=True
             freq_next_token = np.bincount(generated_tokens[i,:,0].cpu().numpy(), minlength=vocab_size)/generated_tokens.shape[1]
+            # 3rd dim index for generated_tokens is 0 to look only at first generated token.
 
             for j in range(k):
                 token = tokenizer.decode(top_k_indices[i, j], skip_special_tokens=True)
                 prob = top_k_probs[i, j].item()
-                print(f"    #{j}: {token} \n        (probability: {prob:.4f}) \n        (frequency: {freq_next_token[top_k_indices[i, j]].item():.4f})")
-
-            
-'''
-    # Compare empirical distribution of generated tokens with next token probs
-
-    for i in range(len(prompts)):
-        freq_next_token = np.bincount(generated_tokens[i,:,0].cpu().numpy(), minlength=vocab_size)/generated_tokens.shape[1]
-        print(f"Empirical distribution of next tokens for prompt {i}:")
+                print(f"  Token #{j}: {token} \n    (probability: {prob:.4f}) \n    (frequency: {freq_next_token[top_k_indices[i, j]].item():.4f}, S.E.: {np.sqrt(freq_next_token[top_k_indices[i, j]] * (1 - freq_next_token[top_k_indices[i, j]]) / generated_tokens.shape[1]):.4f})")
 
 
+    '''
     # Test on other prompts
-    prompt_tmp = ['What is 1+1?',
-                  'What is the capital of France?',
-                  'Who wrote "To Kill a Mockingbird"?',
-                  'What is the largest mammal?',
-                  'What is the boiling point of water?',
-                  'What is the speed of light?',
-                  'What is the meaning of life?',
-                  'What is the capital of Japan?',
-                  'Who painted the Mona Lisa?',
-                  'What is the square root of 16?',
-                  'What is the chemical symbol for gold?',
-                  'What is the currency of the United States?',
-                  'What is the largest planet in our solar system?']
+    prompt_tmp = [
+        'What is 1+1?',
+        'What is the capital of France?',
+        'Who wrote "To Kill a Mockingbird"?',
+        'What is the largest mammal?',
+        'What is the boiling point of water?',
+        'What is the speed of light?',
+        'What is the meaning of life?',
+        'What is the capital of Japan?',
+        'Who painted the Mona Lisa?',
+        'What is the square root of 16?',
+        'What is the chemical symbol for gold?',
+        'What is the currency of the United States?',
+        'What is the largest planet in our solar system?'
+    ]
     
     generated_tokens = get_next_tokens(model, tokenizer, prompt_tmp,
                                     only_new_tokens=True, use_chat_template=True,
@@ -302,4 +341,4 @@ if __name__ == "__main__":
                 print(f"    #{j}: {tokenizer.decode(generated_tokens[i,j,:], skip_special_tokens=True)}")
         else:
             print(f"Generated tokens for prompt {i}: {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
-'''
+    '''

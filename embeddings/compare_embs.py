@@ -58,31 +58,6 @@ def load_embeddings(filepath, num_obs = None):
 
     return embeddings_full
 
-    """
-    Randomly subsample rows (uniformly at random, without replacement) from embeddings_full array.
-
-    Parameters:
-    -----------
-    embeddings_full : np.ndarray
-        The embeddings. Shape: (n_obs, embedding_dim)
-
-    n_subsample : int
-        Number of rows to subsample. Defaults to all.
-
-    Returns:
-    --------
-    embeddings : np.ndarray
-        Subsampled embeddings. Shape: (n_subsample, embedding_dim)
-    """
-
-    n_obs, d = embeddings_full.shape
-
-    if n_subsample is None:
-        return embeddings_full
-    else:
-        idx = np.random.choice(np.arange(n_obs), size=n_subsample, replace=False)
-        embeddings = embeddings_full[idx,:]
-        return embeddings
 
 def run_pca_on_embeddings(embeddings, n_components=2, random_state=42, **kwargs):
     """
@@ -180,17 +155,17 @@ def run_umap_on_embeddings(embeddings, n_components=2, random_state=42, **kwargs
 
 # For sorting the embeddings files outputted by ttune (default to epoch_* without a uniform number of digits)
 def sort_key(item):
-            name, _ = item
-            if name == 'base':
-                return (0, 0)
-            elif name.startswith('epoch_'):
-                try:
-                    epoch_num = int(name.split('_')[1])
-                except Exception:
-                    epoch_num = float('inf')
-                return (1, epoch_num)
-            else:
-                return (2, name)
+    name, _ = item
+    if name == 'base':
+        return (0, 0)
+    elif name.startswith('epoch_'):
+        try:
+            epoch_num = int(name.split('_')[1])
+        except Exception:
+            epoch_num = float('inf')
+        return (1, epoch_num)
+    else:
+        return (2, name)
 
 # ─── Argument Parsing ───────────────────────────────────────────────────────
 parser = argparse.ArgumentParser(description="Compare and visualize embedding projections over finetuning checkpoints.")

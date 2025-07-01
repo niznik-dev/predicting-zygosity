@@ -8,12 +8,7 @@
 #SBATCH --mail-type=begin # Email when job starts
 #SBATCH --mail-type=end # Email when job ends
 #SBATCH --mail-user=drigobon@princeton.edu
-#SBATCH --output=/home/drigobon/scratch/zyg-out/100k-20epoch/compare_embs.out
 
-
-module purge
-module load anaconda3/2024.10
-conda activate ttenv-umap # Note that env depends on emb_type specified in the python header
 
 
 # ! Magic Numbers & Directories
@@ -44,7 +39,7 @@ FIG_DIR_BASE="$BASE_DIR/zyg-out/$RUN_NAME/figs-$EMB_TYPE/"
 PATTERN="epoch_*.json" # pattern in EMBEDDINGS_DIR to match embeddings files from model checkpoints (does NOT include base model)
 
 EVAL_FILE_PATH="$BASE_DIR/zyg-in/ptwindat_eval.json"
-PYTHON_FILE_PATH="$BASE_DIR/embeddings-analysis/compare_embs.py"
+PYTHON_FILE_PATH="$BASE_DIR/predicting-zygosity/embeddings/compare_embs.py"
 
 # Data
 NUM_OBS=20000 # (200 = 1% of 20k dataset for zyg synthetic validation set)
@@ -61,6 +56,12 @@ SAVE_PLOTS_COS_SIM=0 # whether to save the cosine similarity plots or not (only 
 MAX_PC_TO_COMPARE=2 # which principal component we're comparing (cannot be greater than n_components)
 
 # ! End Magic Numbers & Directories
+
+
+module purge
+module load anaconda3/2024.10
+conda activate ttenv-umap # Note that env depends on emb_type specified below...
+
 
 
 # Directories made in the python script, so no need to create them here
