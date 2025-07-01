@@ -3,6 +3,8 @@ import pandas as pd
 import argparse
 import json
 import matplotlib.pyplot as plt
+import seaborn as sns
+
 from pathlib import Path
 from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
@@ -57,7 +59,6 @@ def load_embeddings(filepath, num_obs = None):
     embeddings_full = np.array(data)[:num_obs, :] if num_obs is not None else np.array(data)
 
     return embeddings_full
-
 
 def run_pca_on_embeddings(embeddings, n_components=2, random_state=42, **kwargs):
     """
@@ -244,11 +245,19 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '--save_plots_grid', 
+    '--save_plots_grid_2d', 
     type=int, 
     choices=[0, 1], 
     default=0,
     help='Save the 2D plots in a grid.'
+)
+
+parser.add_argument(
+    '--save_plots_grid_1d', 
+    type=int, 
+    choices=[0, 1], 
+    default=0,
+    help='Save the 1D plots (comparing densities of 1st reduced dimension between class types) in a grid.'
 )
 
 parser.add_argument(
@@ -294,7 +303,8 @@ fit_to_base = bool(args.fit_to_base)
 n_components = args.n_components
 save_plots_2d = bool(args.save_plots_2d)
 save_plots_3d = bool(args.save_plots_3d)
-save_plots_grid = bool(args.save_plots_grid)
+save_plots_grid_2d = bool(args.save_plots_grid_2d)
+save_plots_grid_1d = bool(args.save_plots_grid_1d)
 k_epoch = args.k_epoch
 save_plots_cos_sim = bool(args.save_plots_cos_sim)
 max_pc_to_compare = args.max_pc_to_compare
@@ -330,24 +340,28 @@ if emb_type == 'PCA':
         x_label = "Base Model PC1"
         y_label = "Base Model PC2"
         z_label = "Base Model PC3"
+        title_1d_dist = "PCA Dim 1 Distribution (fit to base)"
         title_2d = "PCA 2D Projection (fit to base)"
         title_3d = "PCA 3D Projection (fit to base)"
     else:
         x_label = "PC1"
         y_label = "PC2"
         z_label = "PC3"
+        title_1d_dist = "PCA Dim 1 Distribution"
         title_2d = "PCA 2D Projection"
         title_3d = "PCA 3D Projection"
 elif emb_type == 'UMAP':
     x_label = "UMAP 1"
     y_label = "UMAP 2"
     z_label = "UMAP 3"
+    title_1d_dist = "UMAP Dim 1 Distribution"
     title_2d = "UMAP 2D Projection"
     title_3d = "UMAP 3D Projection"
 elif emb_type == 'TSNE':
     x_label = "t-SNE 1"
     y_label = "t-SNE 2"
     z_label = "t-SNE 3"
+    title_1d_dist = "t-SNE Dim 1 Distribution"
     title_2d = "t-SNE 2D Projection"
     title_3d = "t-SNE 3D Projection"
 else:
@@ -502,12 +516,12 @@ for name, file in sorted(embeddings_files.items(), key=sort_key):
 
 
 
-# ─── Plot all models in a grid ───────────────────────────────────────────────────────
+# ─── Plot all 2D embeddings in a grid ───────────────────────────────────────────────────────
 
 # Collect names in sorted order for consistent plotting
 sorted_names = [name for name, _ in sorted(embeddings_files.items(), key=sort_key)]
 
-if save_plots_grid and n_components >= 2:
+if save_plots_grid_2d and n_components >= 2:
     n_models = len(sorted_names)
     ncols = k_epoch
     nrows = (n_models + ncols - 1) // ncols
@@ -537,10 +551,52 @@ if save_plots_grid and n_components >= 2:
 
 
 
+# ─── Plot Embedding Dim 1 distributions (for each true target value) in a grid ───────────────────────────────────────────────────────
+
+# Collect names in sorted order for consistent plotting
+sorted_names = [name for name, _ in sorted(embeddings_files.items(), key=sort_key)]
+
+if save_plots_grid_1d and n_components >= 1:
+    n_models = len(sorted_names)
+    ncols = k_epoch
+    nrows = (n_models + ncols - 1) // ncols
+
+    fig, axes = plt.subplots(nrows, ncols, figsize=(5 * ncols, 4 * nrows), squeeze=False)
+    for idx, name in enumerate(sorted_names):
+        row, col = divmod(idx, ncols)
+        ax = axes[row][col]
+
+        for target in np.unique(targets):
+            # Filter embeddings by target
+            target_mask = targets == target
+            sns.kdeplot(
+                reduced_embs[name][target_mask, 0],
+                ax=ax,
+                hist=False,
+                kde=True,
+                label=f'Target {target}',
+                color=sns.color_palette("viridis", n_colors=len(np.unique(targets)))[target],
+                kde_kws={'fill': True, 'linewidth': 2}
+            )
+
+        ax.set_title(f"{name}")
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+    # Hide unused subplots
+    for idx in range(n_models, nrows * ncols):
+        row, col = divmod(idx, ncols)
+        axes[row][col].axis('off')
+    plt.tight_layout()
+    plt.savefig(f"{fig_dir_base}all_models_{title_1d_dist}_distplot_comparison_grid.png")
+    plt.close()
+
+
+
+
 
 
     # ─── Compare cosine similarity of PC's over time (only for PCA emb_type) ───────────────────────────────────────────────────────
-    if emb_type == 'PCA':
+    if save_plots_cos_sim and emb_type == 'PCA':
         for pc_to_compare in range(1, max_pc_to_compare + 1):
             v1 = PCs['base'][pc_to_compare - 1, :]  # Baseline PC
 
@@ -573,15 +629,14 @@ if save_plots_grid and n_components >= 2:
                 sim_values.append(cos_sim_curr)
 
             # Sort by epochs for plotting
-            if save_plots_cos_sim:
-                epochs, sim_values = zip(*sorted(zip(epochs, sim_values)))
-                plt.figure(figsize=(8, 6))
-                plt.plot(epochs, sim_values, marker='o')
-                plt.title(f"Cosine similarity between PC{pc_to_compare} of base and fine-tuned model")
-                plt.xlabel("Number of Training Epochs")
-                plt.ylabel("Cosine Similarity")
-                plt.xticks(epochs)
-                plt.grid(True)
-                plt.tight_layout()
-                plt.savefig(f"{fig_dir_base}CosSimOverEpochs_PC{pc_to_compare}.png")
-                plt.close()
+            epochs, sim_values = zip(*sorted(zip(epochs, sim_values)))
+            plt.figure(figsize=(8, 6))
+            plt.plot(epochs, sim_values, marker='o')
+            plt.title(f"Cosine similarity between PC{pc_to_compare} of base and fine-tuned model")
+            plt.xlabel("Number of Training Epochs")
+            plt.ylabel("Cosine Similarity")
+            plt.xticks(epochs)
+            plt.grid(True)
+            plt.tight_layout()
+            plt.savefig(f"{fig_dir_base}CosSimOverEpochs_PC{pc_to_compare}.png")
+            plt.close()

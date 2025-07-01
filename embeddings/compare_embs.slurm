@@ -42,31 +42,35 @@ EVAL_FILE_PATH="$BASE_DIR/zyg-in/ptwindat_eval.json"
 PYTHON_FILE_PATH="$BASE_DIR/predicting-zygosity/embeddings/compare_embs.py"
 
 # Data
-NUM_OBS=20000 # (200 = 1% of 20k dataset for zyg synthetic validation set)
+NUM_OBS=200 # (200 = 1% of 20k dataset for zyg synthetic validation set)
 
 # Plotting
-SAVE_PLOTS_2D=1 # whether to save the 2d plots or not
+SAVE_PLOTS_2D=0 # whether to save the 2d plots or not
 
 SAVE_PLOTS_3D=0 # whether to save the 3d plots or not
 
-SAVE_PLOTS_GRID=1 # whether to save the 2d plots in a grid or not
+SAVE_PLOTS_GRID_2D=0 # whether to save the 2d plots in a grid or not
+SAVE_PLOTS_GRID_1D=1 # whether to save the 2d plots in a grid or not
 K_EPOCH=5 # how many epochs to plot in a grid (only matters if SAVE_PLOTS_GRID=1)
 
 SAVE_PLOTS_COS_SIM=0 # whether to save the cosine similarity plots or not (only matters for emb_type='PCA')
-MAX_PC_TO_COMPARE=2 # which principal component we're comparing (cannot be greater than n_components)
+MAX_PC_TO_COMPARE=2 # which principal component we're comparing (cannot be greater than n_components). Ignored if emb_type is not 'PCA' or SAVE_PLOTS_COS_SIM is 0
 
 # ! End Magic Numbers & Directories
 
 
 module purge
 module load anaconda3/2024.10
-conda activate ttenv-umap # Note that env depends on emb_type specified below...
+
+# Activate relevant conda environment (only request ttenv-umap if emb_type is 'UMAP')
+if [ "$EMB_TYPE" == "UMAP" ]; then
+    conda activate ttenv-umap
+else
+    conda activate ttenv
+fi
 
 
-
-# Directories made in the python script, so no need to create them here
-
-# Run script
+# Run script (directories made in the script, so no need to create them here)
 python3 "$PYTHON_FILE_PATH" \
     --emb_type "$EMB_TYPE" \
     --fit_to_base "$FIT_TO_BASE" \
@@ -78,7 +82,8 @@ python3 "$PYTHON_FILE_PATH" \
     --num_obs "$NUM_OBS" \
     --save_plots_2d "$SAVE_PLOTS_2D" \
     --save_plots_3d "$SAVE_PLOTS_3D" \
-    --save_plots_grid "$SAVE_PLOTS_GRID" \
+    --save_plots_grid_2d "$SAVE_PLOTS_GRID_2D" \
+    --save_plots_grid_1d "$SAVE_PLOTS_GRID_1D" \
     --k_epoch "$K_EPOCH" \
     --save_plots_cos_sim "$SAVE_PLOTS_COS_SIM" \
     --max_pc_to_compare "$MAX_PC_TO_COMPARE" \
