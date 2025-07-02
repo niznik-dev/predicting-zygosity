@@ -1,0 +1,22 @@
+# If you have entire nodes, set scaling_factor to the node memory in GB...with a little wiggle room :)
+# Here are some suggested values for context_len, mode/lora_rank, and batch:
+# 
+# Llama_3_2_1B_Instruct: 1.5e-3
+scaling_factor: 40
+memory_multipliers: []
+outside_variables:
+  p_value: [0, 0.25, 0.5, 0.75, 1]
+  n: [1e4, 1e6]
+  context_len: [1, 10]
+torchtune_variables:
+  epochs: [1, 5]
+  # lr_scheduler/component:
+  #    [
+  #       'torchtune.training.lr_schedulers.get_cosine_schedule_with_warmup',
+  #       'torchtune.training.lr_schedulers.get_linear_schedule_with_warmup',
+  #       'torchtune.training.lr_schedulers.get_constant_schedule_with_warmup',
+  #       'torchtune.training.lr_schedulers.get_exponential_schedule_with_warmup'
+  #     ]
+  optimizer/lr: [1e-4, 5e-5, 1e-5]
+  model/lora_rank: [8, 16, 32, 64]
+  batch_size: [1, 6]
