@@ -35,8 +35,9 @@ if __name__ == "__main__":
     # Generating Tokens Params
     generate_args = {
         "max_new_tokens": 15,
-        "do_sample": True,
-        "num_return_sequences": 5,  # Only permitted to be >1 if do_sample=True. 
+        "min_new_tokens": 15,
+        "do_sample": False,
+        "num_return_sequences": 1,  # Only permitted to be >1 if do_sample=True. 
         "renormalize_logits": True,  # Normalize logits to probabilities
         "temperature": 1,  # Temperature for sampling
     }
@@ -81,8 +82,117 @@ if __name__ == "__main__":
     prompts, targets = load_prompts_and_targets(EVAL_DATA_PATH, num_obs=num_obs)
 
     # Load model and tokenizer
-    tokenizer, model = load_model(BASE_MODEL_PATH, adapter_path=ADAPTER_PATH)
+    #tokenizer, model = load_model(BASE_MODEL_PATH, adapter_path=ADAPTER_PATH)
+    tokenizer, model = load_model(BASE_MODEL_PATH, adapter_path=None)
     model.to(device)
+
+
+
+    # Test generation for different params -- Zygosity Data
+
+    # Without chat template
+    generated_tokens = get_next_tokens(model, tokenizer, prompts[0:1],
+                                        only_new_tokens=True, use_chat_template=False,
+                                        **generate_args)    
+    # Print out generated tokens
+    for i in range(generated_tokens.shape[0]):
+        if len(generated_tokens.shape) > 2: # if num_return_sequences>1 and do_sample=True
+            print(f"Prompt: \"{prompts[i]}\":\n\n")
+            print("Generated Tokens:")            
+            for j in range(generated_tokens.shape[1]):
+                print(f"    #{j}: {tokenizer.decode(generated_tokens[i,j,:], skip_special_tokens=True)}")
+        else:
+            print(f"Prompt \"{prompts[i]}\": {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
+    
+
+    # With chat template
+    generated_tokens = get_next_tokens(model, tokenizer, prompts[0:1],
+                                        only_new_tokens=True, use_chat_template=True,
+                                        **generate_args)    
+    # Print out generated tokens
+    for i in range(generated_tokens.shape[0]):
+        if len(generated_tokens.shape) > 2: # if num_return_sequences>1 and do_sample=True
+            print(f"Prompt: \"{prompts[i]}\":\n\n")
+            print("Generated Tokens:")
+            for j in range(generated_tokens.shape[1]):
+                print(f"    #{j}: {tokenizer.decode(generated_tokens[i,j,:], skip_special_tokens=True)}")
+        else:
+            print(f"Prompt \"{prompts[i]}\": {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
+    
+
+
+    # Test generation for different params -- Math!
+
+    prompts_tmp = prompts_new[0:1]
+    # Without chat template
+    generated_tokens = get_next_tokens(model, tokenizer, prompts_tmp,
+                                        only_new_tokens=True, use_chat_template=False,
+                                        **generate_args)    
+    # Print out generated tokens
+    for i in range(generated_tokens.shape[0]):
+        if len(generated_tokens.shape) > 2: # if num_return_sequences>1 and do_sample=True
+            print(f"Prompt: \"{prompts_tmp[i]}\":\n\n")
+            print("Generated Tokens:")
+            for j in range(generated_tokens.shape[1]):
+                print(f"    #{j}: {tokenizer.decode(generated_tokens[i,j,:], skip_special_tokens=True)}")
+        else:
+            print(f"Prompt \"{prompts_tmp[i]}\": {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
+    
+
+
+    # With chat template
+    generated_tokens = get_next_tokens(model, tokenizer, prompts_tmp,
+                                        only_new_tokens=True, use_chat_template=True,
+                                        **generate_args)    
+    # Print out generated tokens
+    for i in range(generated_tokens.shape[0]):
+        if len(generated_tokens.shape) > 2: # if num_return_sequences>1 and do_sample=True
+            print(f"Prompt: \"{prompts_tmp[i]}\":\n\n")
+            print("Generated Tokens:")
+            for j in range(generated_tokens.shape[1]):
+                print(f"    #{j}: {tokenizer.decode(generated_tokens[i,j,:], skip_special_tokens=True)}")
+        else:
+            print(f"Prompt \"{prompts_tmp[i]}\": {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
+    
+
+
+
+    # Test generation for different params -- Geography!
+
+    prompts_tmp = prompts_new[1:2]
+    # Without chat template
+    generated_tokens = get_next_tokens(model, tokenizer, prompts_tmp,
+                                        only_new_tokens=True, use_chat_template=False,
+                                        **generate_args)    
+    # Print out generated tokens
+    for i in range(generated_tokens.shape[0]):
+        if len(generated_tokens.shape) > 2: # if num_return_sequences>1 and do_sample=True
+            print(f"Prompt: \"{prompts_tmp[i]}\":\n\n")
+            print("Generated Tokens:")
+            for j in range(generated_tokens.shape[1]):
+                print(f"    #{j}: {tokenizer.decode(generated_tokens[i,j,:], skip_special_tokens=True)}")
+        else:
+            print(f"Prompt \"{prompts_tmp[i]}\": {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
+    
+
+
+    # With chat template
+    generated_tokens = get_next_tokens(model, tokenizer, prompts_tmp,
+                                        only_new_tokens=True, use_chat_template=True,
+                                        **generate_args)    
+    # Print out generated tokens
+    for i in range(generated_tokens.shape[0]):
+        if len(generated_tokens.shape) > 2: # if num_return_sequences>1 and do_sample=True
+            print(f"Prompt: \"{prompts_tmp[i]}\":\n\n")
+            print("Generated Tokens:")
+            for j in range(generated_tokens.shape[1]):
+                print(f"    #{j}: {tokenizer.decode(generated_tokens[i,j,:], skip_special_tokens=True)}")
+        else:
+            print(f"Prompt \"{prompts_tmp[i]}\": {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
+    
+
+
+
 
 
 
@@ -158,7 +268,7 @@ if __name__ == "__main__":
 
 
 
-    '''
+    
     # For printing out generated tokens
     # Note: Commented out to avoid printing too much output...
     for i in range(generated_tokens.shape[0]):
@@ -168,4 +278,4 @@ if __name__ == "__main__":
                 print(f"    #{j}: {tokenizer.decode(generated_tokens[i,j,:], skip_special_tokens=True)}")
         else:
             print(f"Generated tokens for prompt {i}: {tokenizer.decode(generated_tokens[i], skip_special_tokens=True)}")
-    '''
+    
