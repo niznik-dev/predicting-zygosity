@@ -572,7 +572,6 @@ if save_plots_grid_1d and n_components >= 1:
             sns.kdeplot(
                 reduced_embs[name][target_mask, 0],
                 ax=ax,
-                hist=False,
                 kde=True,
                 label=f'Target {target}',
                 color=sns.color_palette("viridis", n_colors=len(np.unique(targets)))[target],

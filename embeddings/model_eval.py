@@ -10,7 +10,7 @@ from tqdm import tqdm
 # Hack to import from parent directory
 prev_wd = os.getcwd()
 os.chdir("/home/drigobon/scratch/predicting-zygosity/") # Wherever llm_utils.py is located
-from llm_utils import load_prompts_and_targets, load_model, get_logits, get_next_tokens, get_embeddings
+from llm_utils import load_prompts_and_targets, load_model, get_logits, get_next_tokens, get_embeddings, tokenize_prompts
 os.chdir(prev_wd) # Go back to original working directory
 
 
@@ -36,10 +36,10 @@ if __name__ == "__main__":
     generate_args = {
         "max_new_tokens": 15,
         "min_new_tokens": 15,
-        "do_sample": False,
-        "num_return_sequences": 1,  # Only permitted to be >1 if do_sample=True. 
+        "do_sample": True,
+        "num_return_sequences": 10,  # Only permitted to be >1 if do_sample=True. 
         "renormalize_logits": True,  # Normalize logits to probabilities
-        "temperature": 1,  # Temperature for sampling
+        "temperature": 1e-10,  # Temperature for sampling
     }
     num_runs = 100
     #   Number of token generation runs. Avoids memory issues if num_return_sequences is large. 
@@ -71,8 +71,10 @@ if __name__ == "__main__":
         'What is the largest planet in our solar system?'
     ]
 
+
     # ! ----------------------------- End Magic Numbers -----------------------------
     
+
 
     # ------------------------------------------ Setup ------------------------------------------
 
@@ -85,6 +87,13 @@ if __name__ == "__main__":
     #tokenizer, model = load_model(BASE_MODEL_PATH, adapter_path=ADAPTER_PATH)
     tokenizer, model = load_model(BASE_MODEL_PATH, adapter_path=None)
     model.to(device)
+
+
+
+
+
+
+    # ------------------------------------------ Workspace ------------------------------------------
 
 
 
