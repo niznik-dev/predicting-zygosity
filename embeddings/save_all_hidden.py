@@ -4,13 +4,15 @@ import torch
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
+import pickle
 
-df = pd.read_csv("outputs/book_of_life_sample_1.csv")
+save_file_name = "outputs/book_of_life_hidden_states_all_layers_sample_3_longer.gemma.pt"
+df = pd.read_csv("outputs/book_of_life_sample_3_longer.csv")
 df.head()
 
 
-model_id = "google/medgemma-27b-text-it"
-local_dir = "./medgemma-27b"
+model_id = "google/gemma-3-27b-it" # "mistralai/Mistral-Small-24B-Base-2501" #"google/gemma-3-27b-it"
+local_dir = "./gemma-3-27b-it" #"./Mistral-Small-24B-Base-2501" #"./gemma-3-27b-it"
 tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=local_dir, local_files_only=True)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
@@ -23,42 +25,34 @@ model = AutoModelForCausalLM.from_pretrained(
 model.eval()
 
 texts = df["text"].tolist()
-batch_size = 4
-
-all_hidden_states = []  # Will become list of [num_layers x (B, T, H)]
 
 print('Device:')
 print(next(model.parameters()).device)
 
+batch_size = 1
+all_hidden_states_dict = {}
 
 with torch.no_grad():
     for i in tqdm(range(0, len(texts), batch_size)):
-        print(i)
-        batch_texts = texts[i:i+batch_size]
-        inputs = tokenizer(batch_texts, return_tensors="pt", 
-                           padding="max_length",
-                           truncation=True, 
-                           max_length=45).to(model.device)
+        batch_texts = texts[i:i + batch_size]
+        person_ids = df.iloc[i:i + batch_size]["person_id"].tolist()
 
-        outputs = model(**inputs)
-        hidden_states = outputs.hidden_states  # tuple of (L+1) tensors, each (B, T, H)
-        
-        print(f"Batch {i}: {[h.shape for h in outputs.hidden_states]}")
+        # inputs = tokenizer(batch_texts, return_tensors="pt", 
+        #                    padding="max_length",
+        #                    truncation=True, 
+        #                    max_length=45).to(model.device)
+        inputs = tokenizer(batch_texts, return_tensors="pt", truncation=True).to(model.device)
 
+        outputs = model(**inputs, output_hidden_states=True)
+        hidden_states = outputs.hidden_states  # list of (1, T, H) tensors
 
-        # Stack: shape becomes (L, B, T, H)
-        stacked = torch.stack(hidden_states)
-        all_hidden_states.append(stacked.cpu())
+        stacked = torch.stack(hidden_states)[:, 0]  # shape: (L, T, H)
 
-# Concatenate across batches: (L, total_B, T, H)
-all_hidden_states_tensor = torch.cat(all_hidden_states, dim=1)
-print(f"Final hidden states tensor shape: {all_hidden_states_tensor.shape}")
+        person_id = i
+        all_hidden_states_dict[person_id] = stacked.cpu().half()
 
-# stacked: list of (L, B, T, H) tensors, already collected in batches
-all_hidden_states = torch.cat(all_hidden_states, dim=1)  # shape: (L, N, T, H)
+# Save full dictionary
+with open(save_file_name, "wb") as f:
+    pickle.dump(all_hidden_states_dict, f)
 
-# Move to CPU and convert to float16 to save space
-all_hidden_states = all_hidden_states.cpu().half()
-
-# Save to compressed npz
-np.savez_compressed("outputs/book_of_life_hidden_states_sample1.npz", hidden_states=all_hidden_states.numpy())
+print(f"Saved {len(all_hidden_states_dict)} entries with shape: {list(all_hidden_states_dict.values())[0].shape}")
