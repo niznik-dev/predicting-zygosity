@@ -10,7 +10,13 @@ import h5py
 from tqdm import tqdm
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from peft import PeftModel  # remove this import if you are not using a PEFT adapter
+from peft import PeftModel
+
+'''
+Notes:
+    - **kwargs functionality built into get_logits() and get_embeddings() methods. Need to check difference between model() and model.generate() methods...
+    - Example usage in 'test-utils.py' / 'test-utils.slurm'.
+'''
 
 
 def load_prompts_and_targets(eval_file: str, num_obs: int = None) -> tuple[list[str], list[str]]:
@@ -261,6 +267,7 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
             - torch.Tensor: The attention mask for the prompts if return_mask is True, else None.
     
     Notes: 
+        - Outputs are NOT sent to CPU.
         - If pool is None, expect OOM... Returns the full hidden states tensor of shape (B, L, T, H) where:
             - B: Batch size.
             - L: Number of layers.
@@ -270,7 +277,6 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
             - B: Batch size.
             - L: Number of layers.
             - H: Hidden size.
-        - Outputs are NOT sent to CPU.
     """
 
     # Extract longest prompt length in batch to pad uniformly (necessary for embedding tensors to be of same dimensions)
@@ -455,6 +461,3 @@ def load_tensor_with_ids(filename, dataset_name="tensor", ids_name="ids_dim0") -
 
     return tensor, ids, attention_mask
 
-
-
-# Examples?
