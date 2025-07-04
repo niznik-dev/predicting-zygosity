@@ -22,7 +22,7 @@ def estimate_memory(scaling_factor, memory_multipliers):
 
 
 def main():
-    with open('perm_params.yaml', 'r') as f:
+    with open('sweep_params.yaml', 'r') as f:
         params = yaml.safe_load(f)
     
     SCALING_FACTOR = params["scaling_factor"]

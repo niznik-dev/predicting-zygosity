@@ -2,12 +2,17 @@
 # Here are some suggested values for context_len, mode/lora_rank, and batch:
 # 
 # Llama_3_2_1B_Instruct: 1.5e-3
-scaling_factor: 40
+scaling_factor: 192
 memory_multipliers: []
+
+# Variables that are relevant for analysis but not used by torchtune
+# These will appear in the yaml with hsweeper_ prefix
 outside_variables:
   p_value: [0, 0.25, 0.5, 0.75, 1]
   n: [1e4, 1e6]
   context_len: [1, 10]
+
+# Variables that are used by torchtune
 torchtune_variables:
   epochs: [1, 5]
   # lr_scheduler/component:
