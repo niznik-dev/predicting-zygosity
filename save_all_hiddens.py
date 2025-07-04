@@ -53,7 +53,10 @@ POOL_TYPES = ['mean_non_padding', 'last_non_padding']
 
 # ! ----------------------------- End Magic Numbers -----------------------------
 
-
+'''
+Notes:
+    - Runs forward passes multiple times to pool in different ways... Takes len(POOL_TYPES) times longer than it should... But, saves on memory! Not an issue if only one type of pooling is used.
+'''
 
 
 print("------------ Starting: Extract Hidden States ------------")

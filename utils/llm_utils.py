@@ -12,6 +12,7 @@ from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
+
 '''
 Notes:
     - **kwargs functionality built into get_logits() and get_embeddings() methods. Need to check difference between model() and model.generate() methods...
