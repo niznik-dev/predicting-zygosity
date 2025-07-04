@@ -7,7 +7,7 @@ from torch import nn
 
 import h5py
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel

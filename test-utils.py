@@ -4,8 +4,6 @@ import torch
 
 import numpy as np
 
-from tqdm import tqdm
-
 from utils.llm_utils import load_model, load_prompts_and_targets, get_next_tokens, get_logits, get_embeddings, pool_hidden_states, save_tensor_with_ids, load_tensor_with_ids
 
 
