@@ -18,20 +18,30 @@ Notes:
     - Example usage in 'test-utils.py' / 'test-utils.slurm'.
 '''
 
+'''
+TODO:
+    - Use a dataloader?
+    - Wrap load_model differently for base and PEFT models
+    - Emphasizing accessibility / usability for newer users.
+    - Functions should check incoming / outcoming things! Maybe not for internal functions...?
+    - New function to return distribution of prompt lengths
+    - Wrap pool_hidden_states() differently for ones requiring att. mask and not.
+    - 
+'''
 
 def load_prompts_and_targets(eval_file: str, num_obs: int = None) -> tuple[list[str], list[str]]:
     """
-    Loads prompts and target outputs from a JSON evaluation file.
+    Loads prompts and target outputs from a JSON file.
     
     Args:
-        eval_file (str): Path to the JSON file containing evaluation data. The file should contain a list of dictionaries,
+        eval_file (str): Path to the JSON file containing data. The file should contain a list of dictionaries,
             each with at least the keys "input" (prompt) and "output" (target).
         num_obs (int): Optional, defaults to None. Number of observations to load.
             If None defaults to the total number of examples in the file.
     
     Returns:
         tuple:
-            - prompts (list of str): List of prompt strings extracted from the evaluation data.
+            - prompts (list of str): List of prompt strings extracted from the data.
             - targets (list of str): List of target output strings (stripped of leading/trailing whitespace) corresponding to the prompts.
     """
     
@@ -55,7 +65,7 @@ def load_prompts_and_targets(eval_file: str, num_obs: int = None) -> tuple[list[
 
 def load_model(model_path: str, tokenizer_path: str = None, adapter_path: str = None) -> tuple[AutoTokenizer,nn.Module]:
     """
-    Loads a model checkpoint with folder specified by model_path. If adapter_path is None, returns base model. 
+    Loads a model checkpoint with folder specified by model_path. If adapter_path is None, returns base model.
     Automatically adds a padding token if the tokenizer does not have one.
     
     Args:
@@ -181,7 +191,7 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
                 logits = torch.cat((logits, batch_logits), dim=0)
                 # shape: (batch_size*i, vocab_size)
 
-    return logits  # Detach from the computation graph and move to CPU to reduce VRAM usage
+    return logits
 
 
 def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
@@ -336,7 +346,7 @@ def pool_hidden_states(hidden_states: torch.Tensor,
             - T: Sequence length (number of tokens).
             - H: Hidden size.
         pool (str): Optional, defaults to "last". Pooling method across token dimension.
-            - None: No pooling, returns the hidden states as is.
+            - None: No pooling, returns the hidden states as is. Not recommended -- memory will be sad :(
             - "mean": Mean pooling over the token dimension.
             - "mean_non_padding": Mean pooling over the token dimension, ignoring padding tokens.
             - "median": Median pooling over the token dimension.
