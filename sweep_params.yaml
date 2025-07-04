@@ -2,6 +2,7 @@
 # Here are some suggested values for context_len, mode/lora_rank, and batch:
 # 
 # Llama_3_2_1B_Instruct: 1.5e-3
+# Llama_3_3_70B_Instruct: 7.1e-3
 scaling_factor: 192
 memory_multipliers: []
 
