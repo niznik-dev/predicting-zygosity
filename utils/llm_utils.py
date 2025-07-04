@@ -13,6 +13,14 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel  # remove this import if you are not using a PEFT adapter
 
 
+
+'''
+Notes:
+    - Currently moving each batch to CPU to reduce VRAM usage. BUT -- this is almost surely much slower...
+    - Implemented option in get_embeddings() to move each batch to CPU, but default is False. Runs into memory issues with 1B model, 200 prompts...
+    - Consider pooling each batch instead of the whole big tensor at end... Will reduce memory consumption by multiplicative factor of T...
+'''
+
 def load_prompts_and_targets(eval_file: str, num_obs: int = None) -> tuple[list[str], list[str]]:
     """
     Loads prompts and target outputs from a JSON evaluation file.
@@ -142,7 +150,6 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
             NOTE: Will be on CPU to reduce VRAM usage.
     """
 
-    max_len = max(len(prompt) for prompt in prompts) # longest prompt length to pad to
     logits = None
 
     model.eval()  # Ensure the model is in evaluation mode
@@ -151,7 +158,7 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
         for i in tqdm(range(0, len(prompts), batch_size)):
             batch_prompts = prompts[i:i + batch_size]
 
-            batch_inputs = tokenize_prompts(tokenizer, batch_prompts, use_chat_template=use_chat_template)#, max_length=max_len)
+            batch_inputs = tokenize_prompts(tokenizer, batch_prompts, use_chat_template=use_chat_template)
             batch_inputs = batch_inputs.to(model.device)
 
             outputs = model(**batch_inputs, **kwargs)
@@ -232,7 +239,7 @@ def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[st
 
 
 def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str], 
-                    use_chat_template = True, batch_size = 4, return_mask = False,
+                    use_chat_template = True, batch_size = 4, return_mask = False, batches_to_cpu = False,
                     **kwargs) -> tuple[torch.Tensor, torch.Tensor | None]:
     """
     Get the embeddings for the given prompts.
@@ -244,6 +251,9 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
         use_chat_template (bool): Optional, defaults to True. Whether to use chat template for encoding.
         batch_size (int): Optional, defaults to 4. The batch size to use for inference.
         return_mask (bool): Optional, defaults to False. Whether to return the attention mask associated with the prompts.
+        batches_to_cpu (bool): Optional, defaults to False. If True, moves each batch of embeddings to CPU to reduce VRAM usage.
+            If False, keeps the embeddings on the same device as the model.
+            NOTE: default option is False, but may consume too much VRAM for large models / batches / prompts.
         kwargs (dict): Additional keyword arguments to pass to model() method.
 
     Returns:
@@ -274,19 +284,19 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
             batch_embed = torch.stack(outputs.hidden_states, dim = 1) # shape: (B, L, T, H)
 
             if embeddings is None:
-                embeddings = batch_embed.detach().cpu()
+                embeddings = batch_embed.detach().cpu() if batches_to_cpu else batch_embed
             else:
-                embeddings = torch.cat((embeddings, batch_embed.detach().cpu()), dim=0) # cat along batch dimension 0
+                embeddings = torch.cat((embeddings, batch_embed.detach().cpu()), dim=0) if batches_to_cpu else torch.cat((embeddings, batch_embed), dim=0)
                 # shape: (B*i, L, T, H)
 
             if return_mask:
                 if attention_mask is None:
-                    attention_mask = batch_inputs["attention_mask"].detach().cpu()
+                    attention_mask = batch_inputs["attention_mask"].detach().cpu() if batches_to_cpu else batch_inputs["attention_mask"]
                 else:
-                    attention_mask = torch.cat((attention_mask, batch_inputs["attention_mask"].detach().cpu()), dim=0)
+                    attention_mask = torch.cat((attention_mask, batch_inputs["attention_mask"].detach().cpu()), dim=0) if batches_to_cpu else torch.cat((attention_mask, batch_inputs["attention_mask"]), dim=0)
                     # shape: (B*i, T)
 
-    return embeddings, attention_mask
+    return embeddings.detach().cpu(), attention_mask.detach().cpu() if return_mask else None
     
 
 def pool_hidden_states(hidden_states: torch.Tensor, 
