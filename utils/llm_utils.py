@@ -13,14 +13,6 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel  # remove this import if you are not using a PEFT adapter
 
 
-
-'''
-Notes:
-    - Currently moving each batch to CPU to reduce VRAM usage. BUT -- this is almost surely much slower...
-    - Implemented option in get_embeddings() to move each batch to CPU, but default is False. Runs into memory issues with 1B model, 200 prompts...
-    - Consider pooling each batch instead of the whole big tensor at end... Will reduce memory consumption by multiplicative factor of T...
-'''
-
 def load_prompts_and_targets(eval_file: str, num_obs: int = None) -> tuple[list[str], list[str]]:
     """
     Loads prompts and target outputs from a JSON evaluation file.
@@ -258,7 +250,7 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
         tokenizer (AutoTokenizer): The tokenizer to use for encoding prompts.
         prompts (list[str]): The list of prompts to evaluate.
         use_chat_template (bool): Optional, defaults to True. Whether to use chat template for encoding.
-        pool (str): Optional, defaults to "last". Pooling method for the hidden states. If None, no pooling is applied.
+        pool (str): Optional, defaults to "last". Pooling method for the hidden states. See pool_hidden_states() for details.
         batch_size (int): Optional, defaults to 4. The batch size to use for inference.
         return_mask (bool): Optional, defaults to False. Whether to return the attention mask associated with the prompts.
         kwargs (dict): Additional keyword arguments to pass to model() method.
@@ -269,12 +261,24 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
             - torch.Tensor: The attention mask for the prompts if return_mask is True, else None.
     
     Notes: 
+        - If pool is None, expect OOM... Returns the full hidden states tensor of shape (B, L, T, H) where:
+            - B: Batch size.
+            - L: Number of layers.
+            - T: Sequence length (number of tokens).
+            - H: Hidden size.
+        - If pool is not None, returns the pooled embeddings of shape (B, L, H) where:
+            - B: Batch size.
+            - L: Number of layers.
+            - H: Hidden size.
         - Outputs are NOT sent to CPU.
     """
 
     # Extract longest prompt length in batch to pad uniformly (necessary for embedding tensors to be of same dimensions)
-    # NOTE: This is a probably a bad idea if we have memory issues and/or high variance length prompts...
-    T = max(len(prompt) for prompt in prompts) 
+    # Only used if pool is None, otherwise max_length is set to None
+    if pool is None:
+        T = max(len(prompt) for prompt in prompts) 
+    else:
+        T = None
 
     pooled_embeds = None
     attention_mask = None
