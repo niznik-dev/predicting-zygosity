@@ -12,15 +12,18 @@ from utils.llm_utils import load_model, load_prompts_and_targets, get_next_token
 
 # ! ----------------------------- Magic Numbers -----------------------------
 
-# Directories
+# Common Directories
 RUN_NAME="100k-20epoch" # name of folder with checkpoints
-
 BASE_DIR="/home/drigobon/scratch/"
 BASE_MODEL_PATH=f"{BASE_DIR}/torchtune_models/Llama-3.2-1B-Instruct"
 DATA_PATH=f"{BASE_DIR}/zyg-in/ptwindat_eval.json"
+
+# Models and Paths to Save
 MAX_EPOCH=20
-ADAPTER_PATHS=[None]+[f"{BASE_DIR}/zyg-out/{RUN_NAME}/epoch_{i}/" for i in range(MAX_EPOCH)] # Set to None to use base model without adapter
-SAVE_PATHS=[f"{BASE_DIR}/zyg-out/{RUN_NAME}/hidden_states/base_model/"]+[f"{BASE_DIR}/zyg-out/{RUN_NAME}/hidden_states/epoch_{i}/" for i in range(MAX_EPOCH)] # Directories to save hidden states
+ADAPTER_PATHS=[None]+\
+    [f"{BASE_DIR}/zyg-out/{RUN_NAME}/epoch_{i}/" for i in range(MAX_EPOCH)] # List of paths to adapter checkpoints, None for base model
+SAVE_PATHS=[f"{BASE_DIR}/zyg-out/{RUN_NAME}/hidden_states/base_model/"]+\
+    [f"{BASE_DIR}/zyg-out/{RUN_NAME}/hidden_states/epoch_{i}/" for i in range(MAX_EPOCH)] # Directories to save hidden states
 
 
 # Tokenization Params.
@@ -29,7 +32,7 @@ USE_CHAT_TEMPLATE=True # Whether to use chat template for prompts
 
 
 # Data Loading Params
-NUM_OBS=200 # Set to None to load all observations from the eval file
+NUM_OBS=25 # Set to None to load all observations from the eval file
 
 
 # Embedding Pooling Params
@@ -38,6 +41,7 @@ POOL_TYPES = ['mean_non_padding', 'last_non_padding']
 
 # ! ----------------------------- End Magic Numbers -----------------------------
 
+print("------------ Starting: Extract Hidden States ------------")
 
 # Load prompts and targets
 prompts, targets = load_prompts_and_targets(DATA_PATH, num_obs=NUM_OBS)
@@ -45,9 +49,9 @@ ids = [f"obs_{i}" for i in range(len(prompts))]  # Generate IDs for each observa
 
 # Set up device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
 
-
-
+# Loop over candidate model checkpoints (each corresponding to a different adapter)
 for i in range(len(ADAPTER_PATHS)):
 
     SAVE_PATH = SAVE_PATHS[i]
@@ -64,21 +68,26 @@ for i in range(len(ADAPTER_PATHS)):
     tokenizer, model = load_model(BASE_MODEL_PATH, adapter_path=ADAPTER_PATH)
     model.to(device)
 
-    # Get embeddings
-    embed, mask = get_embeddings(model, tokenizer, prompts, 
-                            batch_size=BATCH_SIZE, return_mask=True)
-
-    # Save
-    embed_save_path = f"{SAVE_PATH}/raw_embeddings.h5"
-    save_tensor_with_ids(embed_save_path, embed, ids, attention_mask=mask)
-
-    # Pooling Options
+    # Loop over pooling types specified in POOL_TYPES
     for POOL_TYPE in POOL_TYPES:
-        pooled_embed = pool_hidden_states(embed, pool=POOL_TYPE, attention_mask=mask)
+        print(f"\nPooling type: {POOL_TYPE}")
 
-        # Save pooled embeddings
-        pooled_save_path = f"{SAVE_PATH}/pooled_{POOL_TYPE}.h5"
-        save_tensor_with_ids(pooled_save_path, pooled_embed, ids)
+        # Get embeddings
+        embeds, mask = get_embeddings(model, tokenizer, prompts, 
+                                    use_chat_template=USE_CHAT_TEMPLATE, pool=POOL_TYPE,
+                                    batch_size=BATCH_SIZE, return_mask=False)
 
+        # Move to CPU
+        embeds = embeds.detach().cpu()
+        if mask is not None:
+            mask = mask.detach().cpu()
+
+        # Save embeddings
+        pooled_save_path = f"{SAVE_PATH}/embeds_pooled_{POOL_TYPE}.h5"
+        save_tensor_with_ids(pooled_save_path, embeds, ids)
+        print(f"Saved pooled embeddings of shape {embeds.shape} to {pooled_save_path}")
+
+
+print("------------ Extracting Hidden States Complete! ------------")
 
 

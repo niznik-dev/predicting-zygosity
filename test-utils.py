@@ -83,6 +83,9 @@ generated_tokens = get_next_tokens(model, tokenizer, prompts,
                                     use_chat_template=USE_CHAT_TEMPLATE,
                                     **GENERATE_ARGS)
 
+# Move to CPU
+generated_tokens = generated_tokens.detach().cpu()  
+
 # Print Generated Tokens
 for i in range(generated_tokens.shape[0]):
     if len(generated_tokens.shape) > 2: # if num_return_sequences>1 and do_sample=True
@@ -103,6 +106,9 @@ logits = get_logits(model, tokenizer, prompts,
                     batch_size=BATCH_SIZE)
 print(f"Logits shape: {logits.shape}")
 
+# Move to CPU
+logits = logits.detach().cpu() 
+
 logit_save_path = f"{SAVE_PATH}/logits.h5"
 save_tensor_with_ids(logit_save_path, logits, ids)
 
@@ -118,13 +124,16 @@ print("Logits saved and loaded successfully")
 
 # ----------------------------- Embeddings -----------------------------
 
-# Test Embedding Extraction
+# Test Embedding Extraction (without pooling)
 print("\n\nTesting embedding extraction...")
 
-embed, mask = get_embeddings(model, tokenizer, prompts, 
+embed, mask = get_embeddings(model, tokenizer, prompts, pool = None,
                             batch_size=BATCH_SIZE, return_mask=True)
 print(f"Embeddings shape: {embed.shape}")
 
+# Move to CPU
+embed = embed.detach().cpu() 
+mask = mask.detach().cpu() if mask is not None else None
 
 embed_save_path = f"{SAVE_PATH}/embeddings.h5"
 save_tensor_with_ids(embed_save_path, embed, ids, attention_mask=mask)
@@ -151,6 +160,9 @@ for pool in pool_types:
     pooled_embed = pool_hidden_states(embed, pool=pool, attention_mask=mask)
     print(f"Pooled embeddings shape: {pooled_embed.shape}")
 
+    # Move to CPU
+    pooled_embed = logits.detach().cpu() 
+
     # Save pooled embeddings
     pooled_save_path = f"{SAVE_PATH}/pooled_embeddings_{pool}.h5"
     save_tensor_with_ids(pooled_save_path, pooled_embed, ids)
@@ -165,4 +177,4 @@ for pool in pool_types:
 
 
 
-print('Complete!')
+print('\n\nComplete!')

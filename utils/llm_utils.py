@@ -70,7 +70,8 @@ def load_model(model_path: str, tokenizer_path: str = None, adapter_path: str = 
             - tokenizer (AutoTokenizer): Loaded tokenizer.
             - model (nn.Module): Loaded model.
         
-    NOTE: Does not send to device automatically.
+    Notes: 
+        - Does not send to device automatically.
     """
 
     # Load tokenizer
@@ -110,6 +111,9 @@ def tokenize_prompts(tokenizer: AutoTokenizer, prompts: list[str],
     
     Returns:
         dict: A dictionary containing the tokenized prompts, with keys 'input_ids', 'attention_mask'.
+
+    Notes: 
+        - Does not send to device automatically.
     """
 
     if max_length is None:
@@ -147,7 +151,9 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
 
     Returns:
         torch.Tensor: The logits for the prompts. Shape: (batch_size, vocab_size). Correspond to the last non-padding token in each prompt.
-            NOTE: Will be on CPU to reduce VRAM usage.
+    
+    Notes: 
+        - Outputs are NOT sent to CPU.
     """
 
     logits = None
@@ -171,13 +177,13 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
 
             # Concatenate
             if logits is None:
-                logits = batch_logits.detach().cpu()
+                logits = batch_logits
                 # shape: (batch_size, vocab_size)
             else:
-                logits = torch.cat((logits, batch_logits.detach().cpu()), dim=0)
+                logits = torch.cat((logits, batch_logits), dim=0)
                 # shape: (batch_size*i, vocab_size)
 
-    return logits
+    return logits  # Detach from the computation graph and move to CPU to reduce VRAM usage
 
 
 def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
@@ -201,7 +207,9 @@ def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[st
             Shape: Either of:
                 - (batch_size, seq_len) if num_return_sequences==1 (in **kwargs)
                 - (batch_size, num_return_sequences, seq_len<=max_new_tokens) if num_return_sequences>1 (in **kwargs).
-            NOTE: Will be on CPU to reduce VRAM usage.
+    
+    Notes: 
+        - Outputs are NOT sent to CPU.
     """
 
     generated_tokens = None
@@ -230,16 +238,17 @@ def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[st
 
             # Concatenate
             if generated_tokens is None:
-                generated_tokens = batch_generated_tokens.detach().cpu()
+                generated_tokens = batch_generated_tokens
                 # shape: (batch_size, vocab_size)
             else:
-                generated_tokens = torch.cat((generated_tokens, batch_generated_tokens.detach().cpu()), dim=0)
+                generated_tokens = torch.cat((generated_tokens, batch_generated_tokens), dim=0)
 
     return generated_tokens
 
 
 def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str], 
-                    use_chat_template = True, batch_size = 4, return_mask = False, batches_to_cpu = False,
+                    use_chat_template = True, pool = "last",
+                    batch_size = 4, return_mask = False, 
                     **kwargs) -> tuple[torch.Tensor, torch.Tensor | None]:
     """
     Get the embeddings for the given prompts.
@@ -249,25 +258,25 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
         tokenizer (AutoTokenizer): The tokenizer to use for encoding prompts.
         prompts (list[str]): The list of prompts to evaluate.
         use_chat_template (bool): Optional, defaults to True. Whether to use chat template for encoding.
+        pool (str): Optional, defaults to "last". Pooling method for the hidden states. If None, no pooling is applied.
         batch_size (int): Optional, defaults to 4. The batch size to use for inference.
         return_mask (bool): Optional, defaults to False. Whether to return the attention mask associated with the prompts.
-        batches_to_cpu (bool): Optional, defaults to False. If True, moves each batch of embeddings to CPU to reduce VRAM usage.
-            If False, keeps the embeddings on the same device as the model.
-            NOTE: default option is False, but may consume too much VRAM for large models / batches / prompts.
         kwargs (dict): Additional keyword arguments to pass to model() method.
 
     Returns:
         tuple:
             - torch.Tensor: The embeddings for the prompts.
             - torch.Tensor: The attention mask for the prompts if return_mask is True, else None.
-        NOTE: Will be on CPU to reduce VRAM usage.
+    
+    Notes: 
+        - Outputs are NOT sent to CPU.
     """
 
     # Extract longest prompt length in batch to pad uniformly (necessary for embedding tensors to be of same dimensions)
     # NOTE: This is a probably a bad idea if we have memory issues and/or high variance length prompts...
     T = max(len(prompt) for prompt in prompts) 
 
-    embeddings = None
+    pooled_embeds = None
     attention_mask = None
 
     model.eval()  # Ensure the model is in evaluation mode
@@ -278,29 +287,34 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
 
             batch_inputs = tokenize_prompts(tokenizer, batch_prompts, use_chat_template=use_chat_template, max_length=T)
             batch_inputs = batch_inputs.to(model.device)
+            batch_mask = batch_inputs["attention_mask"]
 
             outputs = model(**batch_inputs, output_hidden_states=True, **kwargs)
 
             batch_embed = torch.stack(outputs.hidden_states, dim = 1) # shape: (B, L, T, H)
 
-            if embeddings is None:
-                embeddings = batch_embed.detach().cpu() if batches_to_cpu else batch_embed
+            # Pool hidden states over the token dimension
+            batch_pooled_embed = pool_hidden_states(batch_embed, pool=pool, attention_mask=batch_mask) 
+            # shape: (B, L, H), or (B, L, T, H) if pool is None
+
+            if pooled_embeds is None:
+                pooled_embeds = batch_pooled_embed
             else:
-                embeddings = torch.cat((embeddings, batch_embed.detach().cpu()), dim=0) if batches_to_cpu else torch.cat((embeddings, batch_embed), dim=0)
-                # shape: (B*i, L, T, H)
+                pooled_embeds = torch.cat((pooled_embeds, batch_pooled_embed), dim=0)
+                # shape: (B*i, L, H), or (B*i, L, T, H) if pool is None
 
             if return_mask:
                 if attention_mask is None:
-                    attention_mask = batch_inputs["attention_mask"].detach().cpu() if batches_to_cpu else batch_inputs["attention_mask"]
+                    attention_mask = batch_mask
                 else:
-                    attention_mask = torch.cat((attention_mask, batch_inputs["attention_mask"].detach().cpu()), dim=0) if batches_to_cpu else torch.cat((attention_mask, batch_inputs["attention_mask"]), dim=0)
+                    attention_mask = torch.cat((attention_mask, batch_mask), dim=0)
                     # shape: (B*i, T)
 
-    return embeddings.detach().cpu(), attention_mask.detach().cpu() if return_mask else None
-    
+    return pooled_embeds, attention_mask
+
 
 def pool_hidden_states(hidden_states: torch.Tensor, 
-                        pool: str = "mean",
+                        pool: str = "last",
                         attention_mask: torch.Tensor = None) -> torch.Tensor:
     """
     Pool hidden states over the token dimension.
@@ -311,8 +325,9 @@ def pool_hidden_states(hidden_states: torch.Tensor,
             - L: Number of layers.
             - T: Sequence length (number of tokens).
             - H: Hidden size.
-        pool (str): Optional. Pooling method — "mean", "first", "last", or "last_non_padding".
-            - "mean": (Default) Mean pooling over the token dimension.
+        pool (str): Optional, defaults to "last". Pooling method across token dimension.
+            - None: No pooling, returns the hidden states as is.
+            - "mean": Mean pooling over the token dimension.
             - "mean_non_padding": Mean pooling over the token dimension, ignoring padding tokens.
             - "median": Median pooling over the token dimension.
             - "first": Use the first token's embedding.
@@ -323,7 +338,14 @@ def pool_hidden_states(hidden_states: torch.Tensor,
 
     Returns:
         torch.Tensor: Pooled embeddings of shape (B, L, H)
+
+    Notes: 
+        - Outputs are NOT sent to CPU.
     """
+
+    if pool is None:
+        # No pooling, return hidden states as is
+        return hidden_states
 
     with torch.no_grad():
         if pool == "mean":
