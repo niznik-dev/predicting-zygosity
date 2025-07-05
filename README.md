@@ -1,5 +1,5 @@
 # cruijff-kit
-A reboot of Alessandra's repo now attached to our new Project, "Everything Predictor"!
+A torchtune-based toolkit for fine-tuning and evaluating large language models using twin data and beyond, featuring automated SLURM script generation and preprocessing pipelines.
 
 # Prerequisites
 
