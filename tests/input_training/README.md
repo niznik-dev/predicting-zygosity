@@ -25,7 +25,7 @@ Use `generate_slurm_script.py` with the following arguments:
 python generate_slurm_script.py \
   --my_wandb_project input_training_tests \
   --my_wandb_run_name false-test \
-  --input_dir_base /home/niznik/scratch/GitHub/predicting-zygosity/tests/input_training/ \
+  --input_dir_base /home/niznik/scratch/GitHub/cruijff-kit/tests/input_training/ \
   --input_formatting '' \
   --dataset_filename simpleCapitalization.json \
   --dataset_val_filename simpleCapitalization.json \
@@ -49,7 +49,7 @@ sbatch finetune_filled.slurm
 python generate_slurm_script.py \
   --my_wandb_project input_training_tests \
   --my_wandb_run_name true-test \
-  --input_dir_base /home/niznik/scratch/GitHub/predicting-zygosity/tests/input_training/ \
+  --input_dir_base /home/niznik/scratch/GitHub/cruijff-kit/tests/input_training/ \
   --input_formatting '' \
   --dataset_filename simpleCapitalization.json \
   --dataset_val_filename simpleCapitalization.json \
