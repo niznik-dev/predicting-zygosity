@@ -45,7 +45,7 @@ checkpointer:
 resume_from_checkpoint: False
 save_adapter_weights_only: False
 save_last_epoch_only: False
-epochs_to_save = null  # If null, will save all epochs as before
+epochs_to_save: 'all'
 
 # Optimizer and Scheduler
 optimizer:
