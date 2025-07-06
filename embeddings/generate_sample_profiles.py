@@ -4,7 +4,7 @@ import random
 from scipy.stats import truncnorm
 
 # Parameters
-NUM_PEOPLE = 10000
+NUM_PEOPLE = 100000
 AGE_MEAN = 45
 AGE_SD = 15
 AGE_MIN = 20
@@ -137,17 +137,17 @@ def generate_people_with_biased_risk(
         prob = high_p if is_biased else low_p
         person["cardio_history"] = int(np.random.rand() < prob)
 
-        # Generate fixed text
-        status = (
-            "has a history of cardiovascular disease"
-            if person["cardio_history"]
-            else "has no history of cardiovascular disease"
-        )
+        # # Generate fixed text
+        # status = (
+        #     "has a history of cardiovascular disease"
+        #     if person["cardio_history"]
+        #     else "has no history of cardiovascular disease"
+        # )
         sentence = (
             f"A {person['age']}-year-old {person['civil_status']} {person['gender']} "
             f"from {person['city']}, born in {person['birthplace']}, "
-            f"earning {person['income']:,} euros per year, "
-            f"{status}."
+            f"earning {person['income']:,} euros per year"
+            # f"{status}."
         )
 
         entry = person.copy()
@@ -164,11 +164,11 @@ if __name__ == "__main__":
     # print(df.head(5))
     
     # df_paraphrases = generate_fake_people_with_paraphrases(NUM_PEOPLE, repeats=5)
-    # df_paraphrases.to_csv("outputs/book_of_life_sample_2.csv", index=False)
+    # df_paraphrases.to_csv("outputs/book_of_life_paraphrases.1K.csv", index=False)
     # print(df_paraphrases.head(5))
     
     df_biased = generate_people_with_biased_risk(
         NUM_PEOPLE, bias_city="Amsterdam", high_p=0.6, low_p=0.1, seed=33, #42
     )
-    df_biased.to_csv("outputs/book_of_life_sample_3_longer.csv", index=False)
+    df_biased.to_csv("outputs/book_of_life_biased.no_label_in_text.100K.csv", index=False)
     print(df_biased.head(5))

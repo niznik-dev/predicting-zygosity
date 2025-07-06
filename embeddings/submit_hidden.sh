@@ -2,7 +2,7 @@
 #SBATCH --job-name=save_hidden
 #SBATCH --output=save_hidden.out
 #SBATCH --error=save_hidden.err
-#SBATCH --time=03:45:00
+#SBATCH --time=13:45:00
 #SBATCH --gres=gpu:1
 #SBATCH --mem=128G
 #SBATCH --cpus-per-task=8

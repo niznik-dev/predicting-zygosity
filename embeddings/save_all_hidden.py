@@ -6,13 +6,13 @@ import numpy as np
 from tqdm import tqdm
 import pickle
 
-save_file_name = "outputs/book_of_life_hidden_states_all_layers_sample_3_longer.gemma.pt"
+save_file_name = "outputs/book_of_life_hidden_states_all_layers_sample_3_longer.mistral.pt"
 df = pd.read_csv("outputs/book_of_life_sample_3_longer.csv")
 df.head()
 
 
-model_id = "google/gemma-3-27b-it" # "mistralai/Mistral-Small-24B-Base-2501" #"google/gemma-3-27b-it"
-local_dir = "./gemma-3-27b-it" #"./Mistral-Small-24B-Base-2501" #"./gemma-3-27b-it"
+model_id = "mistralai/Mistral-Small-24B-Base-2501" #"google/gemma-3-27b-it"
+local_dir = "./Mistral-Small-24B-Base-2501" #"./gemma-3-27b-it"
 tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=local_dir, local_files_only=True)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
