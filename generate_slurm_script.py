@@ -28,6 +28,7 @@ parser.add_argument("--batch_size", type=int, default=4, help="Batch size for tr
 parser.add_argument("--epochs", type=int, default=1, help="Number of epochs to train for")
 parser.add_argument("--save_adapter_weights_only", type=str, default="false", help="Whether to save only the adapter weights (true/false)")
 parser.add_argument("--save_last_epoch_only", type=str, default="false", help="Whether to save only the last epoch (true/false)")
+parser.add_argument("--epochs_to_save", type=int, nargs='+', help='Epochs to save checkpoints at')
 parser.add_argument("--max_steps_per_epoch", type=int, help="Maximum steps per epoch (useful for debugging)")
 parser.add_argument("--log_every_n_steps", type=int, default=5, help="How often to log (in steps)")
 parser.add_argument("--run_val_every_n_steps", type=int, default=0, help="How often to run validation (in steps)")
@@ -73,6 +74,11 @@ for key, value in vars(args).items():
         config["save_adapter_weights_only"] = (value == "true")
     elif key == "save_last_epoch_only":
         config["save_last_epoch_only"] = (value == "true")
+    elif key == "epochs_to_save":
+        if value is not None:
+            config["epochs_to_save"] = [int(epoch) for epoch in value]
+        else:
+            config["epochs_to_save"] = None
     elif key == "train_on_input":
         config["dataset"]["train_on_input"] = (value == "true")
     # The rest are straightforward
