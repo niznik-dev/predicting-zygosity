@@ -52,8 +52,9 @@ import sys
 model_path = str(sys.argv[1]) or "/home/ar0241/scratch/torchtune_models/Llama-3.2-1B-Instruct"
 input_prefix = str(sys.argv[2]) or "/home/ar0241/scratch/twins/"
 output_prefix = str(sys.argv[3]) or "/home/ar0241/scratch/twins/"
-adapter_path = sys.argv[4] if len(sys.argv) > 4 else None
-eval_dataset_path = f"{input_prefix}/ptwindat_eval.json"
+input_filename = str(sys.argv[4]) or "ptwindat_eval.json"
+adapter_path = sys.argv[5] if len(sys.argv) > 5 else None
+eval_dataset_path = f"{input_prefix}/{input_filename}"
 
 # Load tokenizer 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
