@@ -52,6 +52,8 @@ parser.add_argument("--train_on_input", type=str, default="false", help="Whether
 parser.add_argument("--time", type=str, default="00:15:00", help="Time to run the job (HH:MM:SS)")
 parser.add_argument("--gpus", type=int, default=1, help="Number of GPUs to use")
 parser.add_argument("--conda_env", type=str, default="ttenv", help="Name of the conda environment to use")
+parser.add_argument("--venv", type=str, default="", help="Path to the virtual environment to use (if not using conda)")
+parser.add_argument("--modules", type=str, default="", help="Modules to load before running the script, separated by commas (e.g. '2024,Python/3.12.3')")
 
 parser.add_argument("--account", type=str, help="Slurm account to use")
 parser.add_argument("--partition", type=str, help="Slurm partition to use")
@@ -133,6 +135,18 @@ if args.custom_recipe:
         slurm_script = slurm_script.replace("lora_finetune_distributed", 'custom_recipes/' + args.custom_recipe)
 
 slurm_script = slurm_script.replace("<CONDA_ENV>", args.conda_env)
+if args.venv:
+    slurm_script = slurm_script.replace(f"conda activate {args.conda_env}", f"source $PROJECT/venvs/{args.venv}/bin/activate")
+if args.modules:
+    slurm_script = "\n".join(
+        line for line in slurm_script.splitlines()
+        if "conda" not in line
+    )
+    module_string = ''
+    for m in args.modules.split(','):
+        module_string += f"\nmodule load {m.strip()}"
+    slurm_script = slurm_script.replace("module purge", "module purge" + module_string)
+
 slurm_script = slurm_script.replace("<OUTPUT_DIR>", full_output_dir)
 slurm_script = slurm_script.replace("$USER", username)
 
