@@ -7,13 +7,15 @@ python eval.py \
     /models/llama3-1B-Instruct        # model_path
     /data/twins                       # input_prefix (contains ptwindat_eval.json)
     /results/twins_eval               # output_prefix
+    ptwindat_eval.json                # input_filename
 
 # 2  Base model + LoRA/PEFT adapter
 python eval.py \
     /models/llama3-1B-base            # model_path
     /data/twins                       # input_prefix
     /results/twins_eval               # output_prefix
-    /models/llama3-1B-lora            # adapter_path (optional arg #4)
+    ptwindat_eval.json                # input_filename
+    /models/llama3-1B-lora            # adapter_path (optional arg #5)
 
 Output files (dated YYYY-MM-DD):
     <output_prefix>/
