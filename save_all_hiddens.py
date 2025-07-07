@@ -12,28 +12,29 @@ from utils.llm_utils import *
 # ! ----------------------------- Magic Numbers -----------------------------
 
 # ----------- Common Directories -----------
-RUN_NAME="100k-20epoch" # name of folder with checkpoints
+RUN_NAME="1B-100k-20epoch" # name of folder with checkpoints
 BASE_DIR="/home/drigobon/scratch/"
 BASE_MODEL_PATH=f"{BASE_DIR}/torchtune_models/Llama-3.2-1B-Instruct"
-DATA_PATH=f"{BASE_DIR}/zyg-in/ptwindat_eval.json"
+DATA_PATH=f"{BASE_DIR}/BoL-in/book_of_life_biased.no_label_in_text.100K.json"
+CHECKPOINT_BASE_DIR=f"{BASE_DIR}/BoL-out/{RUN_NAME}/" # Base directory for checkpoints
 
 
 # ----------- Models and Paths to Save -----------
 # If using multiple checkpoints per epoch:
 MAX_EPOCH=20
 ADAPTER_PATHS=[None]+\
-    [f"{BASE_DIR}/zyg-out/{RUN_NAME}/epoch_{i}/" for i in range(MAX_EPOCH)] # List of paths to adapter checkpoints, None for base model
-SAVE_PATHS=[f"{BASE_DIR}/zyg-out/{RUN_NAME}/hidden_states/base_model/"]+\
-    [f"{BASE_DIR}/zyg-out/{RUN_NAME}/hidden_states/epoch_{i}/" for i in range(MAX_EPOCH)] # Directories to save hidden states
+    [f"{CHECKPOINT_BASE_DIR}/epoch_{i}/" for i in range(MAX_EPOCH)] # List of paths to adapter checkpoints, None for base model
+SAVE_PATHS=[f"{CHECKPOINT_BASE_DIR}/hidden_states/base_model/"]+\
+    [f"{CHECKPOINT_BASE_DIR}/hidden_states/epoch_{i}/" for i in range(MAX_EPOCH)] # Directories to save hidden states
 
 # # If using only base model:
 # ADAPTER_PATHS = [None]
-# SAVE_PATHS = [f"{BASE_DIR}/zyg-out/{RUN_NAME}/hidden_states/base_model/"]
+# SAVE_PATHS = [f"{CHECKPOINT_BASE_DIR}/hidden_states/base_model/"]
 
 # # If using only one particular fine-tuned model:
 # i = 19 # Example: using the 20th epoch
-# ADAPTER_PATHS = [f"{BASE_DIR}/zyg-out/{RUN_NAME}/epoch_{i}/"]
-# SAVE_PATHS = [f"{BASE_DIR}/zyg-out/{RUN_NAME}/hidden_states/epoch_{i}/""]
+# ADAPTER_PATHS = [f"{CHECKPOINT_BASE_DIR}/epoch_{i}/"]
+# SAVE_PATHS = [f"{CHECKPOINT_BASE_DIR}/hidden_states/epoch_{i}/""]
 
 
 # ----------- Tokenization Params. -----------
@@ -107,5 +108,6 @@ for i in range(len(ADAPTER_PATHS)):
 
 
 print("------------ Extracting Hidden States Complete! ------------")
+
 
 

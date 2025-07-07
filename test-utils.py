@@ -4,8 +4,7 @@ import torch
 
 import numpy as np
 
-from utils.llm_utils import load_model, load_prompts_and_targets, get_next_tokens, get_logits, get_embeddings, pool_hidden_states, save_tensor_with_ids, load_tensor_with_ids
-
+from utils.llm_utils import *
 
 # ! ----------------------------- Magic Numbers -----------------------------
 
@@ -15,7 +14,7 @@ RUN_NAME="100k-20epoch" # name of folder with checkpoints
 BASE_DIR="/home/drigobon/scratch/"
 BASE_MODEL_PATH=f"{BASE_DIR}/torchtune_models/Llama-3.2-1B-Instruct"
 DATA_PATH=f"{BASE_DIR}/zyg-in/ptwindat_eval.json"
-ADAPTER_PATH=f"{BASE_DIR}/zyg-out/{RUN_NAME}/epoch_19/" # Set to None to use base model without adapter
+ADAPTER_PATH=None #f"{BASE_DIR}/zyg-out/{RUN_NAME}/epoch_19/" # Set to None to use base model without adapter
 SAVE_PATH=f"{BASE_DIR}/out-test-llm-utils/"
 
 
@@ -34,7 +33,7 @@ GENERATE_ARGS={
 }
 
 # Data Loading Params
-NUM_OBS=22 # Set to None to load all observations from the eval file
+NUM_OBS=2 # Set to None to load all observations from the eval file
 
 
 # ! ----------------------------- End Magic Numbers -----------------------------
@@ -117,6 +116,26 @@ logits_loaded, ids_loaded, _ = load_tensor_with_ids(logit_save_path, dataset_nam
 assert np.array_equal(logits, logits_loaded), "Loaded logits do not match original logits"
 
 print("Logits saved and loaded successfully")
+
+
+
+
+
+
+
+prompt_tmp = ['What is the capital of France?']
+
+logits = get_logits(model, tokenizer, prompt_tmp, use_chat_template=False)
+probs = torch.softmax(logits, dim=-1)
+
+vals, inds = torch.topk(probs, 10)
+# Print top 10 tokens and their probabilities
+print("\nTop 10 tokens and their probabilities:")
+for val, ind in zip(vals[0], inds[0]):
+    token = tokenizer.decode(ind.item(), skip_special_tokens=True)
+    print(f"Token: {token}, Probability: {val.item():.4f}")
+
+
 
 
 

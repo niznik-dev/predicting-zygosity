@@ -107,6 +107,7 @@ def load_model(model_path: str, tokenizer_path: str = None, adapter_path: str = 
 
 
 def tokenize_prompts(tokenizer: AutoTokenizer, prompts: list[str],
+                    preprompt: str = '',
                     use_chat_template = True, max_length = None) -> dict:
     """    
     Tokenizes the given prompts using the specified tokenizer.
@@ -114,6 +115,7 @@ def tokenize_prompts(tokenizer: AutoTokenizer, prompts: list[str],
     Args:
         tokenizer (AutoTokenizer): The tokenizer to use for encoding prompts.
         prompts (list[str]): The list of prompts to tokenize.
+        preprompt (str): Optional, defaults to ''. Common text to prepend to each prompt.
         use_chat_template (bool): Optional, defaults to True. Whether to use chat template for encoding.
         max_length (int or None): Optional, defaults to None. Maximum length of the tokenized sequences. 
                 If None, uses the max length in batch and pads to the longest prompt length.
@@ -132,7 +134,7 @@ def tokenize_prompts(tokenizer: AutoTokenizer, prompts: list[str],
 
     if use_chat_template:
         # Apply chat template to prompts
-        chat_prompts = [[{"role": "user", "content": prompt}] for prompt in prompts]
+        chat_prompts = [[{"role": "user", "content": preprompt+prompt}] for prompt in prompts]
 
         inputs = tokenizer.apply_chat_template(chat_prompts, tokenize=True, 
                                                 add_generation_prompt=True, 
@@ -145,6 +147,7 @@ def tokenize_prompts(tokenizer: AutoTokenizer, prompts: list[str],
 
 
 def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
+                    preprompt: str = '',
                     use_chat_template = True, batch_size = 4,
                     **kwargs) -> torch.Tensor:
     """
@@ -154,6 +157,7 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
         model (nn.Module): The model to use for inference.
         tokenizer (AutoTokenizer): The tokenizer to use for encoding prompts.
         prompts (list[str]): The list of prompts to evaluate.
+        preprompt (str): Optional, defaults to ''. Common text to prepend to each prompt.
         use_chat_template (bool): Optional, defaults to True. Whether to use chat template for encoding.
         batch_size (int): Optional, defaults to 4. The batch size to use for inference.
         kwargs (dict): Additional keyword arguments to pass to model() method.
@@ -173,7 +177,9 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
         for i in tqdm(range(0, len(prompts), batch_size)):
             batch_prompts = prompts[i:i + batch_size]
 
-            batch_inputs = tokenize_prompts(tokenizer, batch_prompts, use_chat_template=use_chat_template)
+            batch_inputs = tokenize_prompts(tokenizer, batch_prompts, 
+                                            preprompt=preprompt,
+                                            use_chat_template=use_chat_template)
             batch_inputs = batch_inputs.to(model.device)
 
             outputs = model(**batch_inputs, **kwargs)
@@ -196,6 +202,7 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
 
 
 def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
+                    preprompt: str = '',
                     use_chat_template = True, only_new_tokens = True, batch_size = 4,
                     **kwargs) -> torch.Tensor:
     """
@@ -205,6 +212,7 @@ def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[st
         model (nn.Module): The model to use for inference.
         tokenizer (AutoTokenizer): The tokenizer to use for encoding prompts.
         prompts (list[str]): The list of prompts to evaluate.
+        preprompt (str): Optional, defaults to ''. Common text to prepend to each prompt.
         use_chat_template (bool): Optional, defaults to True. Whether to use chat template for encoding.
         only_new_tokens (bool): Optional, defaults to True. If True, only return the newly generated tokens, excluding the input tokens.
         batch_size (int): Optional, defaults to 4. The batch size to use for inference.
@@ -229,7 +237,10 @@ def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[st
         for i in tqdm(range(0, len(prompts), batch_size)):
             batch_prompts = prompts[i:i + batch_size]
 
-            batch_inputs = tokenize_prompts(tokenizer, batch_prompts, use_chat_template=use_chat_template)
+
+            batch_inputs = tokenize_prompts(tokenizer, batch_prompts, 
+                                            preprompt=preprompt,
+                                            use_chat_template=use_chat_template)
             batch_inputs = batch_inputs.to(model.device)
 
             batch_generated_tokens = model.generate(**batch_inputs, **kwargs)
@@ -256,6 +267,7 @@ def get_next_tokens(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[st
 
 
 def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str], 
+                    preprompt: str = '',
                     use_chat_template = True, pool = "last",
                     batch_size = 4, return_mask = False, 
                     **kwargs) -> tuple[torch.Tensor, torch.Tensor | None]:
@@ -266,6 +278,7 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
         model (nn.Module): The model to use for inference.
         tokenizer (AutoTokenizer): The tokenizer to use for encoding prompts.
         prompts (list[str]): The list of prompts to evaluate.
+        preprompt (str): Optional, defaults to ''. Common text to prepend to each prompt.
         use_chat_template (bool): Optional, defaults to True. Whether to use chat template for encoding.
         pool (str): Optional, defaults to "last". Pooling method for the hidden states. See pool_hidden_states() for details.
         batch_size (int): Optional, defaults to 4. The batch size to use for inference.
@@ -306,7 +319,9 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
         for i in tqdm(range(0, len(prompts), batch_size)):
             batch_prompts = prompts[i:i + batch_size]
 
-            batch_inputs = tokenize_prompts(tokenizer, batch_prompts, use_chat_template=use_chat_template, max_length=T)
+            batch_inputs = tokenize_prompts(tokenizer, batch_prompts, 
+                                            preprompt=preprompt,
+                                            use_chat_template=use_chat_template, max_length = T)
             batch_inputs = batch_inputs.to(model.device)
             batch_mask = batch_inputs["attention_mask"]
 
