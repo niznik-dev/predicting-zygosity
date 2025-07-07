@@ -127,7 +127,10 @@ if args.partition:
 if args.constraint:
     slurm_script = slurm_script.replace("##SBATCH --constraint=<CONST>", "#SBATCH --constraint=" + args.constraint)
 if args.custom_recipe:
-    slurm_script = slurm_script.replace("lora_finetune_single_device", 'custom_recipes/' + args.custom_recipe)
+    if args.gpus == 1:
+        slurm_script = slurm_script.replace("lora_finetune_single_device", 'custom_recipes/' + args.custom_recipe)
+    else:
+        slurm_script = slurm_script.replace("lora_finetune_distributed", 'custom_recipes/' + args.custom_recipe)
 
 slurm_script = slurm_script.replace("<CONDA_ENV>", args.conda_env)
 slurm_script = slurm_script.replace("<OUTPUT_DIR>", full_output_dir)
