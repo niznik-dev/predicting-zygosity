@@ -53,7 +53,7 @@ Generate train.json and test.json into your current working directory and then u
 python generate_slurm_script.py \
   --my_wandb_project predictable_or_not \
   --my_wandb_run_name binary_sequence_test \
-  --input_dir_base /home/niznik/scratch/GitHub/predicting-zygosity/tests/bit_sequences/ \
+  --input_dir_base /home/niznik/scratch/GitHub/cruijff-kit/tests/bit_sequences/ \
   --input_formatting '' \
   --dataset_filename train.json \
   --dataset_val_filename test.json \

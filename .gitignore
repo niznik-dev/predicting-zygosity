@@ -6,3 +6,4 @@ finetune_m.yaml
 tests/predictable_or_not/*.json
 finetune_*.slurm
 finetune_*.yaml
+*G/
