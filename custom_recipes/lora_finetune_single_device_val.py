@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import sys
+import os
 import time
 
 from functools import partial
@@ -200,6 +201,18 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
                 "Hint: enable_activation_checkpointing is True, but enable_activation_offloading isn't. "
                 "Enabling activation offloading should reduce memory further.",
             )
+
+        # Embeddings
+        self._get_embeddings = cfg.get("get_embeddings", False)
+        self._embeddings_output_path = cfg.get("embeddings_output_path", None)
+        if self._get_embeddings:
+            assert(
+                self._embeddings_output_path is not None
+            ), "embeddings_output_path must be set if get_embeddings is True"
+            self._embeddings = {}
+            self._targets = {}
+            os.makedirs(self._embeddings_output_path, exist_ok=True)
+
 
     def load_checkpoint(self, cfg_checkpointer: DictConfig) -> Dict[str, Any]:
         """
@@ -503,7 +516,7 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
             lora_attn_modules=self._lora_attn_modules,
             apply_lora_to_mlp=self._apply_lora_to_mlp,
             apply_lora_to_output=self._apply_lora_to_output,
-            state_dict_keys=model.state_dict().keys(),
+            #state_dict_keys=model.state_dict().keys(), # ! Fails if left uncommented... Unexpected keyword...
             base_missing=base_missing,
             base_unexpected=base_unexpected,
             lora_missing=lora_missing,
@@ -673,8 +686,10 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         )
 
     def _loss_step(self, batch: Dict[str, torch.Tensor]) -> torch.Tensor:
+        
         # Shape [b, s], needed for the loss not the model
         labels = batch.pop("labels")
+        
         # run model
         with self.activations_handling_ctx:
             logits = self._model(**batch)
@@ -704,7 +719,70 @@ class LoRAFinetuneRecipeSingleDevice(FTRecipeInterface):
         # free logits otherwise it peaks backward memory
         del logits
 
+
+        # Get embeddings if needed
+        if self._get_embeddings:
+            embeddings = self.get_embeddings(batch)
+
+            # Store embeddings and targets for later use
+            if self.epochs_run not in self._embeddings:
+                self._embeddings[self.epochs_run] = embeddings.detach().item()
+                self._targets[self.epochs_run] = labels.detach().item()
+            else: # if already initialized for current epoch
+                # Concatenate new embeddings and targets to the existing ones
+                self._embeddings[self.epochs_run] = torch.cat(
+                    (self._embeddings[self.epochs_run], embeddings.detach())
+                )
+                self._targets[self.epochs_run] = torch.cat(
+                    (self._targets[self.epochs_run], labels.detach())
+                )
+        
+
         return loss
+
+
+
+    def get_embeddings(self, batch: Dict[str, torch.Tensor]) -> torch.Tensor:
+        """
+        Get embeddings from the model for the given batch. Requires no packing!!! 
+        (Otherwise the mean pooling will not work correctly)
+        """
+        # Ensure the model is in eval mode
+        self._model.eval()
+
+        # ! NOT WORKING! Needs to be fixed for packed sequences...
+        mask = batch.get("mask").materialize().float()  # shape: (batch_size, 1, seq_len, seq_len)
+        print(mask.shape, flush = True)
+        print(mask, flush = True)
+
+        # Define hook to capture the last hidden state
+        hidden_states = {'last_hidden': None}
+        def hook_fn(module, input, output):
+            hidden_states['last_hidden'] = output
+
+        # Register hook to last layer of the model
+        handle = self._model.layers[-1].register_forward_hook(hook_fn)
+
+        # Run forward pass (no grad needed for embeddings)
+        with torch.no_grad():
+            outputs = self._model(**batch)
+
+        # Access hidden state
+        last_hidden = hidden_states['last_hidden']  # shape: (batch_size, seq_len, hidden_size)
+        print(last_hidden.shape, flush = True)
+        print(last_hidden, flush = True)
+        
+        handle.remove() # Remove the hook
+
+        # Mean pooling (ignore padding tokens)
+        # ! NOTE: This will ONLY make sense if no packing is used in the dataloader...
+        embeddings = (last_hidden * mask.unsqueeze(-1)).sum(1) / mask.sum(1) # shape: (batch_size, hidden_size)
+
+        print(embeddings.shape, flush = True)
+        print(embeddings, flush = True)
+        
+        return embeddings
+
 
     def validate(self) -> Dict[str, float]:
         """
