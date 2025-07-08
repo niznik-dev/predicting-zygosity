@@ -149,6 +149,7 @@ def tokenize_prompts(tokenizer: AutoTokenizer, prompts: list[str],
 def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
                     preprompt: str = '',
                     use_chat_template = True, batch_size = 4,
+                    dtype = torch.float16,
                     **kwargs) -> torch.Tensor:
     """
     Get the logits for the given prompts and targets.
@@ -160,6 +161,7 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
         preprompt (str): Optional, defaults to ''. Common text to prepend to each prompt.
         use_chat_template (bool): Optional, defaults to True. Whether to use chat template for encoding.
         batch_size (int): Optional, defaults to 4. The batch size to use for inference.
+        dtype (torch.dtype): Optional, defaults to torch.float16. The data type to use for the logits.
         kwargs (dict): Additional keyword arguments to pass to model() method.
 
     Returns:
@@ -189,6 +191,9 @@ def get_logits(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str],
             input_lengths = (batch_inputs["attention_mask"].sum(dim=1) - 1)  # subtract 1 for zero-based indexing
             
             batch_logits = outputs.logits[torch.arange(len(batch_prompts)), input_lengths] # shape: (batch_size, vocab_size)
+
+            # Downcast to desired data type
+            batch_logits = batch_logits.to(dtype=dtype)
 
             # Concatenate
             if logits is None:
@@ -270,6 +275,7 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
                     preprompt: str = '',
                     use_chat_template = True, pool = "last",
                     batch_size = 4, return_mask = False, 
+                    dtype = torch.float16,
                     **kwargs) -> tuple[torch.Tensor, torch.Tensor | None]:
     """
     Get the embeddings for the given prompts.
@@ -283,6 +289,7 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
         pool (str): Optional, defaults to "last". Pooling method for the hidden states. See pool_hidden_states() for details.
         batch_size (int): Optional, defaults to 4. The batch size to use for inference.
         return_mask (bool): Optional, defaults to False. Whether to return the attention mask associated with the prompts.
+        dtype (torch.dtype): Optional, defaults to torch.float16. The data type to use for the embeddings.
         kwargs (dict): Additional keyword arguments to pass to model() method.
 
     Returns:
@@ -328,6 +335,10 @@ def get_embeddings(model: nn.Module, tokenizer: AutoTokenizer, prompts: list[str
             outputs = model(**batch_inputs, output_hidden_states=True, **kwargs)
 
             batch_embed = torch.stack(outputs.hidden_states, dim = 1) # shape: (B, L, T, H)
+
+            # Downcast to desired data type
+            batch_embed = batch_embed.to(dtype=dtype)
+
 
             # Pool hidden states over the token dimension
             batch_pooled_embed = pool_hidden_states(batch_embed, pool=pool, attention_mask=batch_mask) 
@@ -417,7 +428,8 @@ def pool_hidden_states(hidden_states: torch.Tensor,
 
 
 def save_tensor_with_ids(filename, tensor, ids, 
-                        attention_mask = None, dataset_name="tensor", ids_name="ids_dim0"):
+                        attention_mask = None,
+                        dataset_name="tensor", ids_name="ids_dim0"):
     """
     Saves a tensor and its associated dim-0 identifiers to an HDF5 file.
 
@@ -455,7 +467,8 @@ def save_tensor_with_ids(filename, tensor, ids,
     print(f"Saved tensor of shape {tensor.shape}{', attention_mask' if attention_mask is not None else ''} and ids to {filename}")
 
 
-def load_tensor_with_ids(filename, dataset_name="tensor", ids_name="ids_dim0") -> tuple[np.ndarray, list[str], np.ndarray | None]:
+def load_tensor_with_ids(filename,
+                        dataset_name="tensor", ids_name="ids_dim0") -> tuple[np.ndarray, list[str], np.ndarray | None]:
     """
     Loads a tensor and its associated dim-0 identifiers from an HDF5 file.
 
@@ -466,9 +479,9 @@ def load_tensor_with_ids(filename, dataset_name="tensor", ids_name="ids_dim0") -
 
     Returns:
         tuple: 
-            - tensor (np.ndarray): Object of name 'dataset_name' from the HDF5 file.
+            - tensor (torch.tensor): Object of name 'dataset_name' from the HDF5 file.
             - ids (list of str): Object of name 'ids_name' from the HDF5 file.
-            - attention_mask (np.ndarray): Object of name 'attention_mask' from HDF5 file.
+            - attention_mask (torch.tensor): Object of name 'attention_mask' from HDF5 file.
                 Only returned if 'attention_mask' dataset exists in the file, else returns None.
     
     Note: Nothing is sent to any device!
@@ -482,6 +495,12 @@ def load_tensor_with_ids(filename, dataset_name="tensor", ids_name="ids_dim0") -
             attention_mask = f["attention_mask"][:]
         else:
             attention_mask = None
+
+    # Convert numpy arrays to torch tensors
+    tensor = torch.tensor(tensor)
+    if attention_mask is not None:
+        attention_mask = torch.tensor(attention_mask)
+
 
     print(f"Loaded tensor of shape {tensor.shape}{', attention_mask' if attention_mask is not None else ''} and ids from {filename}")
 

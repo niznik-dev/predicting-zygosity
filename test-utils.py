@@ -1,5 +1,4 @@
 import os
-
 import torch
 
 import numpy as np
@@ -34,6 +33,9 @@ GENERATE_ARGS={
 
 # Data Loading Params
 NUM_OBS=2 # Set to None to load all observations from the eval file
+
+# Data Type Params
+DTYPE = torch.float16 # Data type for logits and embeddings
 
 
 # ! ----------------------------- End Magic Numbers -----------------------------
@@ -100,7 +102,10 @@ for i in range(generated_tokens.shape[0]):
 print("\n\nTesting logit extraction...")
 
 logits = get_logits(model, tokenizer, prompts, 
-                    batch_size=BATCH_SIZE)
+                    preprompt = '',
+                    use_chat_template=USE_CHAT_TEMPLATE,
+                    batch_size=BATCH_SIZE,
+                    dtype = DTYPE)
 print(f"Logits shape: {logits.shape}")
 
 # Move to CPU
@@ -120,32 +125,16 @@ print("Logits saved and loaded successfully")
 
 
 
-
-
-
-prompt_tmp = ['What is the capital of France?']
-
-logits = get_logits(model, tokenizer, prompt_tmp, use_chat_template=False)
-probs = torch.softmax(logits, dim=-1)
-
-vals, inds = torch.topk(probs, 10)
-# Print top 10 tokens and their probabilities
-print("\nTop 10 tokens and their probabilities:")
-for val, ind in zip(vals[0], inds[0]):
-    token = tokenizer.decode(ind.item(), skip_special_tokens=True)
-    print(f"Token: {token}, Probability: {val.item():.4f}")
-
-
-
-
-
 # ----------------------------- Embeddings -----------------------------
 
 # Test Embedding Extraction (without pooling)
 print("\n\nTesting embedding extraction...")
 
 embed, mask = get_embeddings(model, tokenizer, prompts, pool = None,
-                            batch_size=BATCH_SIZE, return_mask=True)
+                            preprompt = '',
+                            use_chat_template=USE_CHAT_TEMPLATE,
+                            batch_size=BATCH_SIZE, return_mask=True,
+                            dtype = DTYPE)
 print(f"Embeddings shape: {embed.shape}")
 
 # Move to CPU

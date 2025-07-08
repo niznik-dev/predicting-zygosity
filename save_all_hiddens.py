@@ -21,7 +21,7 @@ CHECKPOINT_BASE_DIR=f"{BASE_DIR}/BoL-out/{RUN_NAME}/" # Base directory for check
 
 # ----------- Models and Paths to Save -----------
 # If using multiple checkpoints per epoch:
-MAX_EPOCH=20
+MAX_EPOCH=10
 ADAPTER_PATHS=[None]+\
     [f"{CHECKPOINT_BASE_DIR}/epoch_{i}/" for i in range(MAX_EPOCH)] # List of paths to adapter checkpoints, None for base model
 SAVE_PATHS=[f"{CHECKPOINT_BASE_DIR}/hidden_states/base_model/"]+\
@@ -48,8 +48,8 @@ NUM_OBS=None # Set to None to load all observations from the eval file
 
 # ----------- Embedding & Pooling Params -----------
 RETURN_MASK=False # Whether to return the attention mask (should pretty much always be false, unless we want to have the length of each prompt.)
-POOL_TYPES = ['mean_non_padding', 'last_non_padding']
-
+POOL_TYPES=['mean_non_padding']#, 'last_non_padding']
+DTYPE_EMBEDS=torch.float16 # Data type for embeddings, can be torch.float32 or torch.float16
 
 # ! ----------------------------- End Magic Numbers -----------------------------
 
@@ -94,7 +94,8 @@ for i in range(len(ADAPTER_PATHS)):
         # Get embeddings
         embeds, mask = get_embeddings(model, tokenizer, prompts, 
                                     use_chat_template=USE_CHAT_TEMPLATE, pool=POOL_TYPE,
-                                    batch_size=BATCH_SIZE, return_mask=RETURN_MASK)
+                                    batch_size=BATCH_SIZE, return_mask=RETURN_MASK,
+                                    dtype = DTYPE_EMBEDS)
 
         # Move to CPU
         embeds = embeds.detach().cpu()
