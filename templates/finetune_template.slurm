@@ -21,3 +21,4 @@ conda activate <CONDA_ENV>
 mkdir -p <OUTPUT_DIR>logs/wandb
 tune run lora_finetune_single_device \
     --config finetune_filled.yaml
+[ $? == 0 ] && mv slurm-${SLURM_JOB_ID}.out <OUTPUT_DIR>/
