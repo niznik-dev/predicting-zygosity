@@ -47,6 +47,7 @@ parser.add_argument("--log_every_n_steps", type=int, default=5, help="How often 
 parser.add_argument("--run_val_every_n_steps", type=int, default=0, help="How often to run validation (in steps)")
 parser.add_argument("--dataset_split_point", type=int, default=80, help="Percentage of the dataset to use for finetuning")
 parser.add_argument("--train_on_input", type=str, default="false", help="Whether to train on the input data (true/false)")
+parser.add_argument("--packed", type=str, default="true", help="Whether to use packed sequences (true/false)")
 
 # ------ Slurm Args -----
 parser.add_argument("--time", type=str, default="00:15:00", help="Time to run the job (HH:MM:SS)")
@@ -91,6 +92,8 @@ for key, value in vars(args).items():
         config["save_last_epoch_only"] = (value == "true")
     elif key == "train_on_input":
         config["dataset"]["train_on_input"] = (value == "true")
+    elif key == "packed":
+        config["dataset"]["packed"] = (value == "true")
     # The rest are straightforward
     else:
         config[key] = value
