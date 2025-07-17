@@ -1,3 +1,32 @@
+
+"""
+This script loads either standalone fine-tuned model or base model + LoRA/PEFT adapter
+
+# 1  Stand-alone fine-tuned weights
+python eval.py \
+    /models/llama3-1B-Instruct        # model_path
+    /data/twins                       # input_prefix (contains ptwindat_eval.json)
+    /results/twins_eval               # output_prefix
+    ptwindat_eval.json                # input_filename
+
+# 2  Base model + LoRA/PEFT adapter
+python eval.py \
+    /models/llama3-1B-base            # model_path
+    /data/twins                       # input_prefix
+    /results/twins_eval               # output_prefix
+    ptwindat_eval.json                # input_filename
+    /models/llama3-1B-lora            # adapter_path (optional arg #5)
+
+Output files (dated YYYY-MM-DD):
+    <output_prefix>/
+        ├─ *_murphy_curve.png     – calibration curve
+        ├─ *_eval_loss.png        – average loss per batch
+        └─ *_evalresults.txt      – full metric report
+
+"""
+
+
+
 import json
 import math
 import torch
@@ -5,6 +34,7 @@ import datetime
 import numpy as np
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from peft import PeftModel
 from sklearn.metrics import (
     confusion_matrix,
     classification_report,
@@ -24,17 +54,32 @@ import sys
 model_path = str(sys.argv[1]) or "/home/ar0241/scratch/torchtune_models/Llama-3.2-1B-Instruct"
 input_prefix = str(sys.argv[2]) or "/home/ar0241/scratch/twins/"
 output_prefix = str(sys.argv[3]) or "/home/ar0241/scratch/twins/"
-eval_dataset_path = f"{input_prefix}/ptwindat_eval.json"
+input_filename = str(sys.argv[4]) or "ptwindat_eval.json"
+adapter_path = sys.argv[5] if len(sys.argv) > 5 else None
+eval_dataset_path = f"{input_prefix}/{input_filename}"
 
-# Load tokenizer and model.
+# Load tokenizer 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 
-model = AutoModelForCausalLM.from_pretrained(model_path)
+
+if adapter_path:
+    base_model = AutoModelForCausalLM.from_pretrained(
+        model_path, low_cpu_mem_usage=True
+    )
+    model = PeftModel.from_pretrained(base_model, adapter_path)
+else:
+    model = AutoModelForCausalLM.from_pretrained(
+        model_path, low_cpu_mem_usage=True
+    )
+
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 model.eval()
+
+
 
 # Load evaluation data.
 with open(eval_dataset_path, "r") as f:

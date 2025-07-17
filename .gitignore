@@ -5,3 +5,6 @@ finetune_m.yaml
 *.pyc
 tests/predictable_or_not/*.json
 logs/
+finetune_*.slurm
+finetune_*.yaml
+*G/
