@@ -63,23 +63,44 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 
+# Consider changing this to "is_multi_gpu" if you want to use multiple GPUs
+is_70b = ('70b' in model_path.lower())
+
+# Did this to make room for adapter weights but may not be necessary now
+max_memory = None
+if is_70b:
+    max_memory = {
+        0: '20GiB',
+        1: '90GiB',
+        2: '90GiB',
+        3: '90GiB',
+    }
 
 if adapter_path:
-    base_model = AutoModelForCausalLM.from_pretrained(
-        model_path, low_cpu_mem_usage=True
-    )
-    model = PeftModel.from_pretrained(base_model, adapter_path)
+    if is_70b:
+        # Max memory may be unnecessary
+        print('Using 70B model memory arrangement for adapter space...')
+        base_model = AutoModelForCausalLM.from_pretrained(
+            model_path, device_map="auto", max_memory=max_memory,
+            low_cpu_mem_usage=True, torch_dtype=torch.bfloat16
+        )
+        model = PeftModel.from_pretrained(base_model, adapter_path, torch_dtype=torch.bfloat16)
+    else:
+        base_model = AutoModelForCausalLM.from_pretrained(
+            model_path, low_cpu_mem_usage=True
+        )
+        model = PeftModel.from_pretrained(base_model, adapter_path)
 else:
     model = AutoModelForCausalLM.from_pretrained(
         model_path, low_cpu_mem_usage=True
     )
 
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
+# Don't move the model a second time if it's already on the device
+# The 70b setup specifies device_map="auto" which already moves the model to the correct device
+if not is_70b:
+    model.to(device)
 model.eval()
-
-
 
 # Load evaluation data.
 with open(eval_dataset_path, "r") as f:
