@@ -2,7 +2,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 # Paths
-model_path = "/scratch/gpfs/niznik/zyg_out_finetune-five/epoch_499/"
+model_path = "/scratch/gpfs/niznik/zyg_out_20K/epoch_99/"
 
 # Load model and tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_path)

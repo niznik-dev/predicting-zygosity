@@ -3,7 +3,12 @@ finetune_m.yaml
 *_filled.yaml
 *_filled.slurm
 *.pyc
+tests/bit_sequences/*.json
+tests/bit_sequences/*.png
+tests/bit_sequences/*.txt
+tests/capitalization/*.json
 tests/predictable_or_not/*.json
+tests/capitalization/*.txt
 logs/
 finetune_*.slurm
 finetune_*.yaml
