@@ -87,12 +87,14 @@ if adapter_path:
         model = PeftModel.from_pretrained(base_model, adapter_path, torch_dtype=torch.bfloat16)
     else:
         base_model = AutoModelForCausalLM.from_pretrained(
-            model_path, low_cpu_mem_usage=True
+            model_path, device_map="auto",
+            low_cpu_mem_usage=True, torch_dtype=torch.bfloat16
         )
-        model = PeftModel.from_pretrained(base_model, adapter_path)
+        model = PeftModel.from_pretrained(base_model, adapter_path, torch_dtype=torch.bfloat16)
 else:
     model = AutoModelForCausalLM.from_pretrained(
-        model_path, low_cpu_mem_usage=True
+        model_path, device_map="auto",
+        low_cpu_mem_usage=True, torch_dtype=torch.bfloat16
     )
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
