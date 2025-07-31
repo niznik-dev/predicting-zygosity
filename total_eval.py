@@ -84,10 +84,6 @@ def main():
         for cand in candidates
     }
 
-    predictions = []
-    losses = []
-    additional_details = []  # To store candidate probabilities per example
-
     # TODO - investigate if we should add back max_length vs abandon it
     logits = llm_utils.get_logits(model, tokenizer, prompts,
         batch_size=batch_size, use_chat_template=False,
@@ -109,6 +105,7 @@ def main():
     target_probs = [cand1_norm_probs[i] if targets[i] == "1" else cand0_norm_probs[i] for i in range(len(targets))]
     losses = [-math.log(float(tp)) for tp in target_probs]
 
+    additional_details = []
     for i in range(0, 5):
         detail = {
             "p(1) (norm)": float(cand1_norm_probs[i]),
