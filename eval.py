@@ -63,23 +63,18 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 
-
 if adapter_path:
     base_model = AutoModelForCausalLM.from_pretrained(
-        model_path, low_cpu_mem_usage=True
+        model_path, device_map="auto",
+        low_cpu_mem_usage=True, torch_dtype=torch.bfloat16
     )
-    model = PeftModel.from_pretrained(base_model, adapter_path)
+    model = PeftModel.from_pretrained(base_model, adapter_path, torch_dtype=torch.bfloat16)
 else:
     model = AutoModelForCausalLM.from_pretrained(
-        model_path, low_cpu_mem_usage=True
+        model_path, device_map="auto",
+        low_cpu_mem_usage=True, torch_dtype=torch.bfloat16
     )
-
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
 model.eval()
-
-
 
 # Load evaluation data.
 with open(eval_dataset_path, "r") as f:
@@ -101,56 +96,70 @@ candidate_token_ids = {
     for cand in candidates
 }
 
+batch_size = 8
 predictions = []
 predicted_probs = []  # Predicted probability for candidate "1"
 additional_details = []  # To store candidate probabilities per example
 losses = []  # Negative log-likelihood loss per example
 
 # Evaluate each prompt.
-for prompt, target in tqdm(zip(prompts, targets), total=len(prompts), desc="Evaluating"):
-    # Tokenize the prompt.
-    input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+#for prompt, target in tqdm(zip(prompts, targets), total=len(prompts), desc="Evaluating"):
+for i in tqdm(range(0, len(prompts), batch_size), desc="Evaluating"):
+    batch_prompts = prompts[i:i+batch_size]
+    batch_targets = targets[i:i+batch_size]
+
+    batch_inputs = tokenizer(
+        batch_prompts,
+        return_tensors="pt",
+        padding=True,
+        truncation=True
+    ).to(device)
 
     # Get logits for the next token.
     with torch.no_grad():
-        outputs = model(input_ids)
-    logits = outputs.logits[0, -1, :]
+        outputs = model(**batch_inputs)
 
-    # Compute full softmax probabilities.
-    softmax_probs = torch.softmax(logits, dim=0)
+    for j, (target, input_ids) in enumerate(zip(batch_targets, batch_inputs.input_ids)):
+        seq_len = (input_ids != tokenizer.pad_token_id).sum().item()
+        logits = outputs.logits[j, seq_len-1, :]
 
-    # Get candidate probabilities directly.
-    cand1_prob = softmax_probs[candidate_token_ids["1"]].item()
-    cand0_prob = softmax_probs[candidate_token_ids["0"]].item()
-    candidate_sum = cand1_prob + cand0_prob
-    # Normalize over candidates so that they sum to 1.
-    normalized_probs = {
-        "1": cand1_prob / candidate_sum,
-        "0": cand0_prob / candidate_sum
-    }
+        # Compute full softmax probabilities.
+        softmax_probs = torch.softmax(logits, dim=0)
 
-    predicted_probs.append(normalized_probs["1"])
-    predicted_label = "1" if normalized_probs["1"] >= normalized_probs["0"] else "0"
-    predictions.append(predicted_label)
+        # Get candidate probabilities directly.
+        cand1_prob = softmax_probs[candidate_token_ids["1"]].item()
+        cand0_prob = softmax_probs[candidate_token_ids["0"]].item()
+        candidate_sum = cand1_prob + cand0_prob
+        # Normalize over candidates so that they sum to 1.
+        normalized_probs = {
+            "1": cand1_prob / candidate_sum,
+            "0": cand0_prob / candidate_sum
+        }
 
-    # Compute loss: negative log likelihood for the correct candidate.
-    loss = -math.log(normalized_probs[target])
-    losses.append(loss)
+        predicted_probs.append(normalized_probs["1"])
+        predicted_label = "1" if normalized_probs["1"] >= normalized_probs["0"] else "0"
+        predictions.append(predicted_label)
 
-    # Prepare sorted candidate probabilities.
-    sorted_cands = sorted(normalized_probs.items(), key=lambda x: x[1], reverse=True)
-    top_candidate_probs = [prob for _, prob in sorted_cands]
-    # If fewer than 3 candidates, pad with N/A.
-    while len(top_candidate_probs) < 3:
-        top_candidate_probs.append("N/A")
+        # Compute loss: negative log likelihood for the correct candidate.
+        loss = -math.log(normalized_probs[target])
+        losses.append(loss)
 
-    detail = {
-        "p(1)": normalized_probs["1"],
-        "p(0)": normalized_probs["0"],
-        "p_sum": 1.0,  # Because we normalized over 2 candidates
-        "top_candidate_probs": top_candidate_probs
-    }
-    additional_details.append(detail)
+        # Prepare sorted candidate probabilities.
+        sorted_cands = sorted(normalized_probs.items(), key=lambda x: x[1], reverse=True)
+        top_candidate_probs = [prob for _, prob in sorted_cands]
+        # If fewer than 3 candidates, pad with N/A.
+        while len(top_candidate_probs) < 3:
+            top_candidate_probs.append("N/A")
+
+        detail = {
+            "p(1)": normalized_probs["1"],
+            "p(0)": normalized_probs["0"],
+            "p_sum": 1.0,  # Because we normalized over 2 candidates
+            "top_candidate_probs": top_candidate_probs
+        }
+        additional_details.append(detail)
+        del outputs, logits, softmax_probs
+        torch.cuda.empty_cache()
 
 # Compute classification metrics.
 accuracy = accuracy_score(targets, predictions)

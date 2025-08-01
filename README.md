@@ -36,7 +36,7 @@ conda create -n ttenv python=3.12
 conda activate ttenv
 pip3 install torch --index-url https://download.pytorch.org/whl/cu126
 pip3 install transformers scikit-learn matplotlib # These are only used for eval.py
-pip3 install torchao torchtune wandb
+pip3 install torchao torchtune wandb h5py
 ```
 
 Once built, make sure to activate the environment when working on any tune command (and load the anaconda module if you're on della)

@@ -1,9 +1,13 @@
-finetune_m.yaml
 *.out
+*_m.yaml
+*_m.slurm
 *_filled.yaml
 *_filled.slurm
 *.pyc
+tests/bit_sequences/*.json
+tests/capitalization/*.json
 tests/predictable_or_not/*.json
 finetune_*.slurm
 finetune_*.yaml
 *G/
+*.eval
