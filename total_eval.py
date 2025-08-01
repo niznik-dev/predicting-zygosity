@@ -89,7 +89,7 @@ def main():
         batch_size=batch_size, use_chat_template=False,
     )
 
-    probs = torch.softmax(logits, dim=0)
+    probs = torch.softmax(logits, dim=1)
 
     cand1_raw_probs = probs[:, candidate_token_ids["1"]]
     cand0_raw_probs = probs[:, candidate_token_ids["0"]]
