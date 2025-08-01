@@ -86,10 +86,10 @@ def main():
 
     # TODO - investigate if we should add back max_length vs abandon it
     logits = llm_utils.get_logits(model, tokenizer, prompts,
-        batch_size=batch_size, use_chat_template=False,
+        batch_size=batch_size, use_chat_template=True,
     )
 
-    probs = torch.softmax(logits, dim=0)
+    probs = torch.softmax(logits, dim=1)
 
     cand1_raw_probs = probs[:, candidate_token_ids["1"]]
     cand0_raw_probs = probs[:, candidate_token_ids["0"]]
@@ -103,11 +103,12 @@ def main():
     # Predictions need to be a string because targets are strings and sklearn metrics expect string labels
     predictions = ["1" if cand1_norm_probs[i] >= cand0_norm_probs[i] else "0" for i in range(len(cand1_norm_probs))]
     target_probs = [cand1_norm_probs[i] if targets[i] == "1" else cand0_norm_probs[i] for i in range(len(targets))]
-    losses = [-math.log(float(tp)) for tp in target_probs]
 
     additional_details = []
     for i in range(0, 5):
         detail = {
+            "p(1) (raw)": float(cand1_raw_probs[i]),
+            "p(0) (raw)": float(cand0_raw_probs[i]),
             "p(1) (norm)": float(cand1_norm_probs[i]),
             "p(0) (norm)": float(cand0_norm_probs[i]),
             "p(0) + p(1) (raw)": float(candidate_prob_sum[i]),
@@ -124,29 +125,6 @@ def main():
     cm = confusion_matrix(targets, predictions, labels=["1", "0"])
     report = classification_report(targets, predictions, labels=["1", "0"])
 
-    # From here on, the metrics want targets to be integers :-|
-    # Compute Brier score.
-    targets_int = [1 if t == "1" else 0 for t in targets]
-    brier = brier_score_loss(targets_int, predicted_probs)
-
-    # Compute AUC score.
-    auc = roc_auc_score(targets_int, predicted_probs)
-
-    # Compute calibration curve (Murphy Curve) using sklearn.
-    fraction_of_positives, mean_predicted_value = calibration_curve(targets_int, predicted_probs, n_bins=10)
-
-    # Plot and save the calibration (Murphy) curve.
-    plt.figure(figsize=(8, 6))
-    plt.plot(mean_predicted_value, fraction_of_positives, "s-", label="Calibration curve")
-    plt.plot([0, 1], [0, 1], "k:", label="Perfect calibration")
-    plt.xlabel("Mean predicted probability")
-    plt.ylabel("Fraction of positives")
-    plt.title("Calibration Curve (Murphy Curve)")
-    plt.legend()
-    murphy_curve_filename = f"{output_prefix}/{datetime.datetime.now().strftime('%Y-%m-%d')}_murphy_curve.png"
-    plt.savefig(murphy_curve_filename)
-    plt.close()
-
     # Save evaluation results to a text file with additional details.
     results_filename = f"{output_prefix}/{datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')}_evalresults.txt"
     with open(results_filename, "w") as f:
@@ -158,14 +136,13 @@ def main():
         f.write(str(cm) + "\n")
         f.write("\nClassification Report:\n")
         f.write(report + "\n\n")
-        f.write(f"Brier Score: {brier:.4f}\n")
-        f.write(f"AUC Score: {auc:.4f}\n")
-        f.write(f"Murphy Curve saved to: {murphy_curve_filename}\n")
 
         # Record details for the first 5 examples.
         f.write("Example Details (first 5 examples):\n")
         for i, detail in enumerate(additional_details):
             f.write(f"Example {i+1}:\n")
+            f.write(f"  p(1) (raw): {detail['p(1) (raw)']:.4f}\n")
+            f.write(f"  p(0) (raw): {detail['p(0) (raw)']:.4f}\n")
             f.write(f"  p(1) (norm): {detail['p(1) (norm)']:.4f}\n")
             f.write(f"  p(0) (norm): {detail['p(0) (norm)']:.4f}\n")
             f.write(f"  p(0) + p(1) (raw): {detail['p(0) + p(1) (raw)']:.4f}\n")
